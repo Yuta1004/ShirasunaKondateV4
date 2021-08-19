@@ -1,0 +1,7 @@
+falcon~=3.0
+gunicorn~=20.1
+requests~=2.21
+python-dateutil~=2.8
+six~=1.12
+pdfminer.six==20201018
+numpy~=1.21

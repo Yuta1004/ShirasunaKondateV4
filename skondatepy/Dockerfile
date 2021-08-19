@@ -12,6 +12,8 @@ VOLUME /srv
 ENV SK_SAVE_DIR /srv
 ENV PATH $PATH:/home/src
 
+ENTRYPOINT ["skondate.py"]
+
 RUN echo "Step1. Setup python libs" && \
     cd /home && \
     pip install -r requirements.txt && \

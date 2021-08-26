@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+import os
+import glob
+
+
 SK_SAVE_DIR = "/srv"
 NGFILE = SK_SAVE_DIR+"/ng_words.txt"
 PDF_DIR = SK_SAVE_DIR+"/pdf"
@@ -56,7 +60,43 @@ def func_edit_ngfile():
 
 
 def func_manage_pdffile():
-    pass
+    while True:
+        print("\n1: Display saved pdf files")
+        print("2: Remove a pdf file")
+        print("99: Exit this mode")
+
+        command = input("[PDF] > ")
+
+        if command == "1":
+            pdf_files_name = list(map(lambda f: f.split("/")[-1], glob.glob(PDF_DIR+"/*")))
+            pdf_files_info = list(map(lambda n: (n.split("_")[0], n.split("_")[1].split(".")[0]), pdf_files_name))
+            sorted_pdf_files_info = sorted(pdf_files_info, key=lambda info: int(info[0])*100+int(info[1]))
+            now_displaying_year = ""
+            for (year, month) in sorted_pdf_files_info:
+                if now_displaying_year != year:
+                    print("{}  ({}) ".format("" if now_displaying_year == "" else "\n", year), end="")
+                    now_displaying_year = year
+                print("{} ".format(month), end="")
+            print("")
+
+        elif command == "2":
+            while True:
+                print("\n99: Exit this mode")
+                year_month = input("[PDF/REMOVE] > ")
+                if year_month == "99" and input("Exit this mode [y/N] > ") == "y":
+                    break
+                year, month = year_month.split(" ")[0], year_month.split(" ")[-1]
+                if year == month:
+                    continue
+                try:
+                    _, _ = int(year), int(month)
+                except:
+                    continue
+                if input("Remove a pdf file [y/N] > ") == "y":
+                    os.remove("{}/{}_{}.pdf".format(PDF_DIR, year, month.zfill(2)))
+
+        elif command == "99" and input("Exit this mode [y/N] > ") == "y":
+            return
 
 
 def func_exit():

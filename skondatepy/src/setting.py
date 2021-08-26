@@ -7,6 +7,7 @@ import glob
 SK_SAVE_DIR = "/srv"
 NGFILE = SK_SAVE_DIR+"/ng_words.txt"
 PDF_DIR = SK_SAVE_DIR+"/pdf"
+ask_ok = lambda: input("Are you sure? [y/N] > ") == "y"
 
 
 def func_edit_ngfile():
@@ -27,9 +28,9 @@ def func_edit_ngfile():
             while True:
                 print("\n99: Exit this mode")
                 new_ng_word = input("[NG/ADD] > ")
-                if new_ng_word == "99" and input("Exit this mode [y/N] > ") == "y":
+                if new_ng_word == "99" and ask_ok():
                     break
-                if input("Add this word \"{}\" [y/N] > ".format(new_ng_word)) == "y":
+                if ask_ok():
                     with open(NGFILE, "a") as f:
                         f.write(new_ng_word+"\n")
 
@@ -38,14 +39,14 @@ def func_edit_ngfile():
             while True:
                 print("\n99: Exit this mode")
                 lnum, remove_lnum = (0, input("[NG/REMOVE] > "))
-                if remove_lnum == "99" and input("Exit this mode [y/N] > ") == "y":
+                if remove_lnum == "99" and ask_ok():
                     break
                 try:
                     lnum = int(remove_lnum)
                 except:
                     print("Input value \"{}\" is not valid number\n".format(lnum))
                     continue
-                if input("Remove line {} [y/N] > ".format(lnum))== "y":
+                if ask_ok():
                     remove_target_lines.append(lnum)
             with open(NGFILE, "r+") as f:
                 ng_words = f.readlines()
@@ -55,7 +56,7 @@ def func_edit_ngfile():
                         f.write(ng_word)
                 f.truncate()
 
-        elif command == "99" and input("Exit this mode [y/N] > ") == "y":
+        elif command == "99" and ask_ok():
             return
 
 
@@ -83,7 +84,7 @@ def func_manage_pdffile():
             while True:
                 print("\n99: Exit this mode")
                 year_month = input("[PDF/REMOVE] > ")
-                if year_month == "99" and input("Exit this mode [y/N] > ") == "y":
+                if year_month == "99" and ask_ok():
                     break
                 year, month = year_month.split(" ")[0], year_month.split(" ")[-1]
                 if year == month:
@@ -92,15 +93,15 @@ def func_manage_pdffile():
                     _, _ = int(year), int(month)
                 except:
                     continue
-                if input("Remove a pdf file [y/N] > ") == "y":
+                if ask_ok():
                     os.remove("{}/{}_{}.pdf".format(PDF_DIR, year, month.zfill(2)))
 
-        elif command == "99" and input("Exit this mode [y/N] > ") == "y":
+        elif command == "99" and ask_ok():
             return
 
 
 def func_exit():
-    if input("Exit this tool [y/N] > ") == "y":
+    if ask_ok():
         exit(0)
 
 

@@ -4,6 +4,29 @@
 
 白砂寮献立アプリ最終ver
 
+## サブプロジェクト
+
+### skondatepy
+
+V3で使用していたPDF解析処理とDB保存処理を1つにまとめ，Dockerイメージ化したもの．  
+
+#### 使用方法
+
+```
+// イメージビルド方法
+$ docker build --tag "skondatepy:1.0" skondatepy
+
+// 実行
+$ docker run -v skondatepy:/srv:rw -it --rm skondatepy:1.0 2021 7
+```
+
+#### 注意
+
+- DockerVolume上に以下のデータを保存します
+    - 献立情報DB(.db:sqlite3)
+    - 解析元ファイル(.pdf:pdf)
+    - NGワードファイル(.txt:txt)
+
 ## 実装案
 
 ### V1, V3の問題点

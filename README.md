@@ -16,8 +16,11 @@ V3で使用していたPDF解析処理とDB保存処理を1つにまとめ，Doc
 // イメージビルド方法
 $ docker build --tag "skondatepy:1.0" skondatepy
 
-// 実行
-$ docker run -v skondatepy:/srv:rw -it --rm skondatepy:1.0 2021 7
+// 実行(PDFファイルダウンロード→解析→DB更新)
+$ docker run -v skondatepy:/srv:rw -it --rm skondatepy:1.0 skondate.py <year> <month>
+
+// 実行(設定ツール)
+$ docker run -v skondatepy:/srv:rw -it --rm skondatepy:1.0 settings.py
 ```
 
 #### 注意

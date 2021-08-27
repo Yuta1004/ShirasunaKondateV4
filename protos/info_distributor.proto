@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package work.nitycnyuta.shirasunakondatev4;
+
+import "utils.proto";
+
+message KInfoResponse {
+    message Kondate {
+        KondateType type = 1;
+        repeated string menu = 2;
+        int32 carlorie = 3;             // カロリー(kcal)
+        float carbohydrate = 4;     // タンパク質(g)
+        float lipid = 5;                   // 脂質(g)
+        float protein = 6;              // 炭水化物(g)
+        float salt = 7;                   // 塩分(g)
+    }
+    Result result = 1;
+    repeated Kondate info = 2;
+}
+
+message KInfoSearchRequest {
+    string query = 1;
+}
+
+message KInfoSearchResponse {
+    message SearchResult {
+        Date date = 1;
+        KondateType type = 2;
+    }
+    Result result = 1;
+    repeated SearchResult search_results = 2;
+}
+
+service KInfoDistributor {
+    rpc get(Date) returns (KInfoResponse) {}
+    rpc search(KInfoSearchRequest) returns (KInfoSearchResponse) {}
+}

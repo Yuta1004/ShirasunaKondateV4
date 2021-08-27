@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+enum KondateType {
+    BREAKFAST = 0;
+    LUNCH = 1;
+    DINNER = 2;
+}
+
+enum ResultType {
+    SUCCESS = 0;
+    FAILED = 1;
+}
+
+message Result {
+    ResultType type = 1;
+    string message = 2;
+}
+
+message Date {
+    int32 year = 1;
+    int32 month = 2;
+    int32 dayofmonth = 3;
+}

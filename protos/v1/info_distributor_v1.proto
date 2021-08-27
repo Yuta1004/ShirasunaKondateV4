@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package work.nitycnyuta.shirasunakondatev4;
+package work.nitycnyuta.shirasunakondatev4.proto.v1;
 
 import "utils.proto";
 

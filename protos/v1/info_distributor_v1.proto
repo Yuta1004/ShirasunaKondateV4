@@ -1,6 +1,9 @@
 syntax = "proto3";
 
-package work.nitycnyuta.shirasunakondatev4.proto.v1;
+option java_multiple_files = true;
+option java_package = "work.nitycnyuta.shirasunakondatev4.proto.v1";
+
+package proto.v1;
 
 import "utils.proto";
 

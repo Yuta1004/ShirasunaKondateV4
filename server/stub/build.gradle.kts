@@ -15,8 +15,12 @@ dependencies {
     implementation("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
 }
 
-java {
-    sourceSets.getByName("main").resources.srcDir("../../protos")
+sourceSets {
+    main {
+        proto {
+            srcDir("../../protos")
+        }
+    }
 }
 
 protobuf {

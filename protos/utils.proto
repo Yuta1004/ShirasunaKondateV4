@@ -1,5 +1,10 @@
 syntax = "proto3";
 
+option java_multiple_files = true;
+option java_package = "work.nitycnyuta.shirasunakondatev4.proto";
+
+package proto;
+
 enum KondateType {
     BREAKFAST = 0;
     LUNCH = 1;

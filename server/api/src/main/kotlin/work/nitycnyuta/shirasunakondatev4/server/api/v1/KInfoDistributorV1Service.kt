@@ -7,7 +7,7 @@ import work.nitycnyuta.shirasunakondatev4.proto.v1.KInfoResponse.Kondate
 import work.nitycnyuta.shirasunakondatev4.proto.v1.KInfoSearchRequest
 import work.nitycnyuta.shirasunakondatev4.proto.v1.KInfoSearchResponse
 
-class KinfoDistributorV1Service : KInfoDistributorV1GrpcKt.KInfoDistributorV1CoroutineImplBase() {
+class KInfoDistributorV1Service : KInfoDistributorV1GrpcKt.KInfoDistributorV1CoroutineImplBase() {
     override suspend fun get(request: Date) = KInfoResponse
                 .newBuilder()
                 .build()

@@ -8,5 +8,10 @@ services:
             - 50000:50000
         environment:
             TZ: Asia/Tokyo
+        volumes:
+            - data:/srv
         command: >
             bash -c "/home/bin/api"
+volumes:
+    data:
+        name: shirasunakondatev4_data

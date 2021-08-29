@@ -1,4 +1,4 @@
-package work.nitycnyuta.shirasunakondatev4.server.api.db
+package work.nitycnyuta.shirasunakondatev4.server.api.v1
 
 import java.io.Closeable
 import java.sql.DriverManager

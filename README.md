@@ -4,49 +4,17 @@
 
 白砂寮献立アプリ最終ver
 
-## プロジェクト
+## サーバ
 
-### server
-
-APIサーバを含む．
-
-#### 使用方法
+### 起動方法
 
 ```
-// 起動
 $ docker-compose up
 ```
 
-#### 注意
+### 注意事項
 
-- ポート
-    - API: 50000
-- DockerVolume`shirasunakondatev4_data`を参照します
-
-### skondatepy
-
-V3で使用していたPDF解析処理とDB保存処理を1つにまとめ，Dockerイメージ化したもの．  
-
-#### 使用方法
-
-```
-// イメージビルド方法
-$ docker build --tag "skondatepy:1.0" skondatepy
-
-// 実行(PDFファイルダウンロード→解析→DB更新)
-$ docker run -v shirasunakondatev4_data:/srv:rw -it --rm skondatepy:1.0 skondate.py <year> <month>
-
-// 実行(設定ツール)
-$ docker run -v shirasunakondatev4_data:/srv:rw -it --rm skondatepy:1.0 settings.py
-```
-
-#### 注意
-
-- `/srv`に以下のデータを保存します
-    - 献立情報DB(.db:sqlite3)
-    - 解析元ファイル(.pdf:pdf)
-    - NGワードファイル(.txt:txt)
-- APIコンテナとデータを共有する場合，DockerVolume`shirasunakondatev4_data`をコンテナの`/srv`に接続するようにしてください
+- `cron.txt`を編集することで，献立情報更新処理が走るタイミングを変更することが出来ます(デフォルト: 毎日6/11/17時)
 
 ## 実装案
 

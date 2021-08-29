@@ -12,9 +12,9 @@ import work.nitycnyuta.shirasunakondatev4.proto.v1.KInfoSearchResponse.SearchRes
 class KondateDBManagerV1(private val dbPath: String) : Closeable {
     val conn = DriverManager.getConnection("jdbc:sqlite:$dbPath")
 
-    fun get(year: Int, month: Int, dayofmonth: Int, type: KondateType): Pair<Boolean, Kondate> {
+    fun get(date: Date, type: KondateType): Pair<Boolean, Kondate> {
         val pstmt = conn.prepareStatement("select * from ${convertType2Str(type)} where date = ?;")
-        pstmt.setString(1, String.format("%04d%02d%02d", year, month, dayofmonth))
+        pstmt.setString(1, String.format("%04d%02d%02d", date.year, date.month, date.dayofmonth))
         try {
             val result = pstmt.executeQuery()
             val nutritive_list = result.getString("nutritive_list").split(";")

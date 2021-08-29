@@ -46,7 +46,7 @@ class KondateDBManagerV1(private val dbPath: String) : Closeable {
         return searchResult.flatten()
     }
 
-    fun __search_child(type: KondateType, query: String): List<SearchResult> {
+    private fun __search_child(type: KondateType, query: String): List<SearchResult> {
         val pstmt = conn.prepareStatement("select date from ${convertType2Str(type)} where menu_list like ?;")
         pstmt.setString(1, "%$query%")
         try {

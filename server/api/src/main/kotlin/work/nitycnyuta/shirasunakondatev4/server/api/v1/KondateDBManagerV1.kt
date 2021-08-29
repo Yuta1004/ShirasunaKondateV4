@@ -14,7 +14,7 @@ class KondateDBManagerV1(private val dbPath: String) : Closeable {
 
     fun get(date: Date, type: KondateType): Pair<Boolean, Kondate> {
         val pstmt = conn.prepareStatement("select * from ${convertType2Str(type)} where date = ?;")
-        pstmt.setString(1, String.format("%04d%02d%02d", date.year, date.month, date.dayofmonth))
+        pstmt.setString(1, "%04d%02d%02d".format(date.year, date.month, date.dayofmonth))
         try {
             val result = pstmt.executeQuery()
             val nutritive_list = result.getString("nutritive_list").split(";")

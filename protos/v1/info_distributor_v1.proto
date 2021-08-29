@@ -11,7 +11,7 @@ message KInfoResponse {
     message Kondate {
         KondateType type = 1;
         repeated string menu = 2;
-        int32 carlorie = 3;             // カロリー(kcal)
+        int32 calorie = 3;             // カロリー(kcal)
         float carbohydrate = 4;     // タンパク質(g)
         float lipid = 5;                   // 脂質(g)
         float protein = 6;              // 炭水化物(g)

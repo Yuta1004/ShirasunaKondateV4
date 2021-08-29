@@ -27,7 +27,10 @@ class KInfoDistributorV1Service : KInfoDistributorV1GrpcKt.KInfoDistributorV1Cor
             return@use KInfoResponse.newBuilder().setResult(result).addAllInfo(info).build()
         }
 
-    override suspend fun search(request: KInfoSearchRequest) = KInfoSearchResponse
-                .newBuilder()
-                .build()
+    override suspend fun search(request: KInfoSearchRequest) =
+        KondateDBManagerV1("/srv/db/kondate.db").use {
+            val searchResults = it.search(request.query)
+            val result = mapOf(true to Result.SUCCESS, false to Result.NOT_FOUND)[searchResults.size > 0]
+            return@use KInfoSearchResponse.newBuilder().setResult(result).addAllSearchResults(searchResults).build()
+        }
 }

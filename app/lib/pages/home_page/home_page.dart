@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     Widget buildDateText() {
-        var nowDate = DateTime.now();
+        final nowDate = DateTime.now();
         var dateText = DateFormat("M月d日 (W)").format(displayingDate);
         if(displayingDate.day == nowDate.add(Duration(days: -1)).day) {
             dateText = "昨日の献立";

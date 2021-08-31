@@ -53,11 +53,12 @@ class _HomePageState extends State<HomePage> {
                         flex : 95,
                         child: GestureDetector(
                             onPanUpdate: (event) {
-                                if(!hasSwiped) {
-                                    if(event.delta.dx > 0) changeDisplayingDate(-1);
-                                    if(event.delta.dx < 0) changeDisplayingDate(1);
-                                    hasSwiped = true;
-                                }
+                                setState(() {
+                                    if(!hasSwiped) {
+                                        displayingDate = displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
+                                        hasSwiped = true;
+                                    }
+                                });
                             },
                             onPanEnd: (event) { hasSwiped = false; },
                             child: buildKondateListView(),
@@ -178,12 +179,6 @@ class _HomePageState extends State<HomePage> {
         if(picked != null) {
             setState(() { displayingDate = picked; });
         }
-    }
-
-    void changeDisplayingDate(int days) {
-        setState(() {
-            displayingDate = displayingDate.add(Duration(days: days));
-        });
     }
 
     /* 献立表示関連 */

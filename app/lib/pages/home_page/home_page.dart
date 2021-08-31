@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
     @override
@@ -6,6 +7,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+    bool hasSwiped = false;
+    DateTime displayingDate = DateTime.now();
+
     @override
     Widget build(BuildContext context) {
         return Scaffold(
@@ -34,10 +38,7 @@ class _HomePageState extends State<HomePage> {
                         child: Container(
                             width: double.infinity,
                             alignment: Alignment.center,
-                            child: Text(
-                                "0000年00月00日 (月)",
-                                style: TextStyle(fontSize: 30),
-                            ),
+                            child: buildDateText(),
                         ),
                     ),
                     Divider(
@@ -48,24 +49,38 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Expanded(
                         flex : 95,
-                        child: ListView.separated(
-                            padding: EdgeInsets.all(8),
-                            itemCount: 12,
-                            itemBuilder: (BuildContext context, int idx) {
-                                return Container(
-                                    color: idx % 4 == 0 ? Colors.grey[350] : null,
-                                    height: idx % 4 == 0 ? 30 : 45,
-                                    child: Text(
-                                        "ああああ",
-                                        style: TextStyle(fontSize: idx % 4 == 0 ? 20 : 25),
-                                    ),
-                                );
+                        child: GestureDetector(
+                            onPanUpdate: (event) {
+                                setState(() {
+                                    if(!hasSwiped) {
+                                        if(event.delta.dx > 0) changeDisplayingDate(-1);
+                                        if(event.delta.dx < 0) changeDisplayingDate(1);
+                                        hasSwiped = true;
+                                    }
+                                });
                             },
-                            separatorBuilder: (BuildContext context, int idx) {
-                                return idx % 4 == 0 || idx % 4 == 3 ?
-                                    SizedBox(width: 0, height: 0) :
-                                    Divider(thickness: 1,);
+                            onPanEnd: (event) {
+                                hasSwiped = false;
                             },
+                            child: ListView.separated(
+                                padding: EdgeInsets.all(8),
+                                itemCount: 12,
+                                itemBuilder: (BuildContext context, int idx) {
+                                    return Container(
+                                        color: idx % 4 == 0 ? Colors.grey[350] : null,
+                                        height: idx % 4 == 0 ? 30 : 45,
+                                        child: Text(
+                                            "ああああ",
+                                            style: TextStyle(fontSize: idx % 4 == 0 ? 20 : 25),
+                                        ),
+                                    );
+                                },
+                                separatorBuilder: (BuildContext context, int idx) {
+                                    return idx % 4 == 0 || idx % 4 == 3 ?
+                                        SizedBox(width: 0, height: 0) :
+                                        Divider(thickness: 1,);
+                                },
+                            ),
                         ),
                     ),
                 ],
@@ -148,5 +163,27 @@ class _HomePageState extends State<HomePage> {
                 )
             ),
         );
+    }
+
+    Widget buildDateText() {
+        var nowDate = DateTime.now();
+        var dateText = DateFormat("M月d日").format(displayingDate);
+        if(nowDate.difference(displayingDate).inDays == 1) {
+            dateText = "明日の献立";
+        } else if(nowDate.difference(displayingDate).inDays == -1) {
+            dateText = "昨日の献立";
+        } else if(nowDate.difference(displayingDate).inDays == 0) {
+            dateText = "今日の献立";
+        } else if(nowDate.difference(displayingDate).inDays < -365) {
+            dateText = DateFormat("y年M月d日").format(displayingDate);
+        }
+        return Text(
+            dateText,
+            style: TextStyle(fontSize:30)
+        );
+    }
+
+    void changeDisplayingDate(int days) {
+        displayingDate = displayingDate.add(Duration(days: days));
     }
 }

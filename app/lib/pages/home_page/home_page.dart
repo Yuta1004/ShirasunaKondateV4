@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:intl/intl.dart';
+import 'package:marquee_widget/marquee_widget.dart';
+import 'package:tuple/tuple.dart';
 
 class HomePage extends StatefulWidget {
     @override
@@ -57,28 +59,8 @@ class _HomePageState extends State<HomePage> {
                                     hasSwiped = true;
                                 }
                             },
-                            onPanEnd: (event) {
-                                hasSwiped = false;
-                            },
-                            child: ListView.separated(
-                                padding: EdgeInsets.all(8),
-                                itemCount: 12,
-                                itemBuilder: (BuildContext context, int idx) {
-                                    return Container(
-                                        color: idx % 4 == 0 ? Colors.grey[350] : null,
-                                        height: idx % 4 == 0 ? 30 : 45,
-                                        child: Text(
-                                            DateFormat("y/M/d").format(displayingDate),
-                                            style: TextStyle(fontSize: idx % 4 == 0 ? 20 : 25),
-                                        ),
-                                    );
-                                },
-                                separatorBuilder: (BuildContext context, int idx) {
-                                    return idx % 4 == 0 || idx % 4 == 3 ?
-                                        SizedBox(width: 0, height: 0) :
-                                        Divider(thickness: 1,);
-                                },
-                            ),
+                            onPanEnd: (event) { hasSwiped = false; },
+                            child: buildKondateListView(),
                         ),
                     ),
                 ],
@@ -164,6 +146,7 @@ class _HomePageState extends State<HomePage> {
         );
     }
 
+    /* 日付関連 */
     Widget buildDateText() {
         final nowDate = DateTime.now();
         var dateText = DateFormat("M月d日 (W)").format(displayingDate);
@@ -201,5 +184,75 @@ class _HomePageState extends State<HomePage> {
         setState(() {
             displayingDate = displayingDate.add(Duration(days: days));
         });
+    }
+
+    /* 献立表示関連 */
+    Widget buildKondateListView() {
+        // item1=>text, item2=>isTitle, item3=>hasSeparater, item4=>nutritive_info
+        var menuDisplayInfo = <Tuple4>[];
+        menuDisplayInfo.add(Tuple4("朝食", true, false, ""));
+        menuDisplayInfo.add(Tuple4("ライス", false, true, ""));
+        menuDisplayInfo.add(Tuple4("鮭の塩焼き", false, true, ""));
+        menuDisplayInfo.add(Tuple4("ほうれん草のおひたし", false, true, ""));
+        menuDisplayInfo.add(Tuple4("大根と油揚げの味噌汁", false, false, ""));
+        menuDisplayInfo.add(Tuple4("昼食", true, false, ""));
+        menuDisplayInfo.add(Tuple4("牛焼肉チャーハン", false, true, ""));
+        menuDisplayInfo.add(Tuple4("春巻き", false, true, ""));
+        menuDisplayInfo.add(Tuple4("牛乳", false, false, ""));
+        menuDisplayInfo.add(Tuple4("夕食", true, false, ""));
+        menuDisplayInfo.add(Tuple4("ライス", false, true, ""));
+        menuDisplayInfo.add(Tuple4("ヒレカツ", false, true, ""));
+        menuDisplayInfo.add(Tuple4("ツナときのこの和風パスタ", false, true, ""));
+        menuDisplayInfo.add(Tuple4("豆腐とワカメの味噌汁", false, false, ""));
+
+        return ListView.separated(
+            padding: EdgeInsets.all(8),
+            itemCount: menuDisplayInfo.length,
+            itemBuilder: (BuildContext context, int idx) {
+                var text = menuDisplayInfo[idx].item1;
+                var isTitle = menuDisplayInfo[idx].item2;
+                var nutritiveInfo = menuDisplayInfo[idx].item4;
+                var child;
+                if(isTitle) {
+                    child = Row(
+                        children: <Widget>[
+                            Expanded(
+                                flex: 1,
+                                child: Center(
+                                    child: Text(
+                                        text,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            Expanded(
+                                flex: 9,
+                                child: Marquee(
+                                    child: Text(
+                                        nutritiveInfo,
+                                        style: TextStyle(fontSize: 18)
+                                    ),
+                                ),
+                            ),
+                        ],
+                    );
+                } else {
+                    child = Text(text, style: TextStyle(fontSize: 20));
+                }
+                return Container(
+                    color: isTitle ? Colors.grey[350] : null,
+                    height: isTitle ? 30 : 40,
+                    alignment: Alignment.centerLeft,
+                    child: child,
+                );
+            },
+            separatorBuilder: (BuildContext context, int idx) {
+                var hasSeparater = menuDisplayInfo[idx].item3;
+                return hasSeparater ? Divider(thickness: 1) : SizedBox(width: 0, height: 0);
+            },
+        );
     }
 }

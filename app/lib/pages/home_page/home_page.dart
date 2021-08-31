@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                                         color: idx % 4 == 0 ? Colors.grey[350] : null,
                                         height: idx % 4 == 0 ? 30 : 45,
                                         child: Text(
-                                            "ああああ",
+                                            DateFormat("y/M/d").format(displayingDate),
                                             style: TextStyle(fontSize: idx % 4 == 0 ? 20 : 25),
                                         ),
                                     );
@@ -167,16 +167,17 @@ class _HomePageState extends State<HomePage> {
 
     Widget buildDateText() {
         var nowDate = DateTime.now();
-        var dateText = DateFormat("M月d日").format(displayingDate);
-        if(nowDate.difference(displayingDate).inDays == 1) {
-            dateText = "明日の献立";
-        } else if(nowDate.difference(displayingDate).inDays == -1) {
+        var dateText = DateFormat("M月d日 (W)").format(displayingDate);
+        if(displayingDate.day == nowDate.add(Duration(days: -1)).day) {
             dateText = "昨日の献立";
-        } else if(nowDate.difference(displayingDate).inDays == 0) {
+        } else if(displayingDate.day == nowDate.add(Duration(days: 1)).day) {
+            dateText = "明日の献立";
+        } else if(displayingDate.day == nowDate.day) {
             dateText = "今日の献立";
-        } else if(nowDate.difference(displayingDate).inDays < -365) {
-            dateText = DateFormat("y年M月d日").format(displayingDate);
+        } else if(displayingDate.year != nowDate.year) {
+            dateText = DateFormat("y年M月d日 (W)").format(displayingDate);
         }
+        dateText = dateText.replaceAll("W", <String>["", "月", "火", "水", "木", "金", "土", "日"][displayingDate.weekday]);
         return Text(
             dateText,
             style: TextStyle(fontSize:30)

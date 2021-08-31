@@ -17,6 +17,7 @@ dependencies:
   grpc: ^3.0.2
   tuple: ^2.0.0
   marquee_widget: ^1.2.0
+  sqflite: ^2.0.0+4
 
 dev_dependencies:
   flutter_test:

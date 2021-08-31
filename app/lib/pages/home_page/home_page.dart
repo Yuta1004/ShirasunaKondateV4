@@ -51,13 +51,11 @@ class _HomePageState extends State<HomePage> {
                         flex : 95,
                         child: GestureDetector(
                             onPanUpdate: (event) {
-                                setState(() {
-                                    if(!hasSwiped) {
-                                        if(event.delta.dx > 0) changeDisplayingDate(-1);
-                                        if(event.delta.dx < 0) changeDisplayingDate(1);
-                                        hasSwiped = true;
-                                    }
-                                });
+                                if(!hasSwiped) {
+                                    if(event.delta.dx > 0) changeDisplayingDate(-1);
+                                    if(event.delta.dx < 0) changeDisplayingDate(1);
+                                    hasSwiped = true;
+                                }
                             },
                             onPanEnd: (event) {
                                 hasSwiped = false;
@@ -200,6 +198,8 @@ class _HomePageState extends State<HomePage> {
     }
 
     void changeDisplayingDate(int days) {
-        displayingDate = displayingDate.add(Duration(days: days));
+        setState(() {
+            displayingDate = displayingDate.add(Duration(days: days));
+        });
     }
 }

@@ -128,7 +128,8 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     ListTile(
                                         leading: Icon(Icons.calendar_today),
-                                        title: Text("日時指定")
+                                        title: Text("日時指定"),
+                                        onTap: () { setDisplayingDate(context); },
                                     ),
                                     ListTile(
                                         leading: Icon(Icons.search),
@@ -182,6 +183,20 @@ class _HomePageState extends State<HomePage> {
             dateText,
             style: TextStyle(fontSize:30)
         );
+    }
+
+    Future<Null> setDisplayingDate(BuildContext context) async {
+        Navigator.pop(context);
+        final nowDate = DateTime.now();
+        final DateTime? picked = await showDatePicker(
+            context: context,
+            initialDate: displayingDate,
+            firstDate: nowDate.add(Duration(days: -365*5)),
+            lastDate: nowDate.add(Duration(days: 365*10))
+        );
+        if(picked != null) {
+            setState(() { displayingDate = picked; });
+        }
     }
 
     void changeDisplayingDate(int days) {

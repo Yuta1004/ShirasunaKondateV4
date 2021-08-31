@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
-import 'package:intl/intl.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 import 'package:tuple/tuple.dart';
+import "/utils/date.dart";
 
 class HomePage extends StatefulWidget {
     @override
@@ -36,11 +36,16 @@ class _HomePageState extends State<HomePage> {
             body: Column(
                 children: <Widget> [
                     Expanded(
-                        flex: 5,
+                        flex: 7,
                         child: Container(
                             width: double.infinity,
                             alignment: Alignment.center,
-                            child: buildDateText(),
+                            child: Center(
+                                child: Text(
+                                    genAppropirateDateText(displayingDate),
+                                    style: TextStyle(fontSize: 30),
+                                ),
+                            ),
                         ),
                     ),
                     Divider(
@@ -50,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                         endIndent: 32,
                     ),
                     Expanded(
-                        flex : 95,
+                        flex : 93,
                         child: GestureDetector(
                             onPanUpdate: (event) {
                                 setState(() {
@@ -147,26 +152,6 @@ class _HomePageState extends State<HomePage> {
         );
     }
 
-    /* 日付関連 */
-    Widget buildDateText() {
-        final nowDate = DateTime.now();
-        var dateText = DateFormat("M月d日 (W)").format(displayingDate);
-        if(displayingDate.day == nowDate.add(Duration(days: -1)).day) {
-            dateText = "昨日の献立";
-        } else if(displayingDate.day == nowDate.add(Duration(days: 1)).day) {
-            dateText = "明日の献立";
-        } else if(displayingDate.day == nowDate.day) {
-            dateText = "今日の献立";
-        } else if(displayingDate.year != nowDate.year) {
-            dateText = DateFormat("y年M月d日 (W)").format(displayingDate);
-        }
-        dateText = dateText.replaceAll("W", <String>["", "月", "火", "水", "木", "金", "土", "日"][displayingDate.weekday]);
-        return Text(
-            dateText,
-            style: TextStyle(fontSize:30)
-        );
-    }
-
     Future<Null> setDisplayingDate(BuildContext context) async {
         Navigator.pop(context);
         final nowDate = DateTime.now();
@@ -181,7 +166,6 @@ class _HomePageState extends State<HomePage> {
         }
     }
 
-    /* 献立表示関連 */
     Widget buildKondateListView() {
         // item1=>text, item2=>isTitle, item3=>hasSeparater, item4=>nutritive_info
         var menuDisplayInfo = <Tuple4>[];

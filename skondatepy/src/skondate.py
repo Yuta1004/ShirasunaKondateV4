@@ -32,11 +32,11 @@ def save_kondate_data_to_db(year, month):
     cur = connect.cursor()
     for kondate in kondate_all_data:
         kondate = kondate.get_as_dict()
-        for col_name in ["breakfast", "lunch", "dinner"]:
+        for _type, col_name in enumerate(["breakfast", "lunch", "dinner"]):
             date = kondate[col_name]["date"]
             menu = list_to_plaintext(kondate[col_name]["menu"], ";")
             nutritive = list_to_plaintext(kondate[col_name]["nutritive"], ";")
-            cur.execute("""REPLACE INTO {} VALUES (?, ?, ?)""".format(col_name), (date, menu, nutritive))
+            cur.execute("""replace into kondate values (?, ?, ?, ?)""".format(col_name), (date, _type+1, menu, nutritive))
             connect.commit()
     cur.close()
     connect.close()

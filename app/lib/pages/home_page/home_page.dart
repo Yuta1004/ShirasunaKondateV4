@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:marquee_widget/marquee_widget.dart';
+import 'package:shirasunakondatev4app/db/manage.dart';
 import 'package:tuple/tuple.dart';
+import "/db/model.dart";
 import "/utils/date.dart";
 
 class HomePage extends StatefulWidget {
@@ -11,6 +13,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
     bool hasSwiped = false;
     DateTime displayingDate = DateTime.now();
+
+    _HomePageState() {
+        existsTables().then((exists) {
+            if(!exists) createTables().then((_){});
+        });
+    }
 
     @override
     Widget build(BuildContext context) {

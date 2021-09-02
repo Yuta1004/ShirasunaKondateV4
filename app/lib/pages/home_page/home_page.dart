@@ -65,12 +65,6 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                 ),
                             ),
-                            Divider(
-                                color: Colors.grey[850],
-                                thickness: 1,
-                                indent: 32,
-                                endIndent: 32,
-                            ),
                             Expanded(
                                 flex : 93,
                                 child: GestureDetector(

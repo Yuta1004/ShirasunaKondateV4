@@ -18,10 +18,13 @@ class _HomePageState extends State<HomePage> {
     DateTime displayingDate = DateTime.now();
     Widget kondateListView = ListView();
 
-    _HomePageState() {
-        existsTables().then((exists) {
-            if(!exists) createTables().then((_){});
+    @override
+    void initState() {
+        super.initState();
+        existsTables().then((exists) async {
+            if(!exists) await createTables();
         });
+        updateKondateListView(displayingDate);
     }
 
     @override

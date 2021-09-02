@@ -141,7 +141,8 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     ListTile(
                                         leading: Icon(Icons.settings),
-                                        title: Text("設定")
+                                        title: Text("設定"),
+                                        onTap: () { Navigator.pushNamed(context, "/settings"); }
                                     ),
                                     ListTile(
                                         leading: Icon(Icons.help),

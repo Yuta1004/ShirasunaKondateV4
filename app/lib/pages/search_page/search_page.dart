@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_spinkit/flutter_spinkit.dart";
+import "/grpc/conn.dart";
 import "/grpc/utils.pb.dart";
+import "/grpc/v1/info_distributor_v1.pb.dart";
+import "/utils/date.dart";
 
 class SearchPage extends StatefulWidget {
     @override
@@ -11,6 +14,9 @@ class _SearchPageState extends State<SearchPage> {
     final  _formKey = GlobalKey<FormState>();
     String _selectedTypeS = "breakfast";
     KondateType _selectedType = KondateType.BREAKFAST;
+    bool nowLoading = false;
+    Widget resultListView = ListView();
+    TextEditingController queryController = TextEditingController();
 
     @override
     Widget build(BuildContext context) {
@@ -34,7 +40,8 @@ class _SearchPageState extends State<SearchPage> {
                     children: <Widget>[
                         Column(
                             children: <Widget>[
-                                Flexible(
+                                Expanded(
+                                    flex: 7,
                                     child: Form(
                                         key: _formKey,
                                         child: Row(
@@ -44,6 +51,7 @@ class _SearchPageState extends State<SearchPage> {
                                                     child: Padding(
                                                         padding: EdgeInsets.symmetric(horizontal: 4),
                                                         child: TextFormField(
+                                                            controller: queryController,
                                                             decoration: InputDecoration(
                                                                 hintText: "検索したいメニューを入力してください",
                                                             ),
@@ -66,8 +74,8 @@ class _SearchPageState extends State<SearchPage> {
                                                                 primary: Colors.orange,
                                                             ),
                                                             onPressed: () {
-                                                                if(_formKey.currentState != null && _formKey.currentState!.validate()) {
-                                                                    print("OK");
+                                                                if(_formKey.currentState != null && _formKey.currentState!.validate() && !nowLoading) {
+                                                                    updateResultListView(queryController.text);
                                                                 }
                                                             },
                                                         ),
@@ -77,78 +85,81 @@ class _SearchPageState extends State<SearchPage> {
                                         ),
                                     ),
                                 ),
-                                Row(
-                                    children: <Widget>[
-                                        Expanded(
-                                            flex: 10,
-                                            child: Container(
-                                                child: Row(
-                                                    children: <Widget>[
-                                                        Radio(
-                                                            value: "breakfast",
-                                                            groupValue: _selectedTypeS,
-                                                            onChanged: (_) {
-                                                                setState(() {
-                                                                    _selectedTypeS = "breakfast";
-                                                                    _selectedType = KondateType.BREAKFAST;
-                                                                });
-                                                            }
-                                                        ),
-                                                        Text(
-                                                            "朝食",
-                                                            style: TextStyle(fontSize: 18),
-                                                        ),
-                                                    ],
+                                Expanded(
+                                    flex: 7,
+                                    child: Row(
+                                        children: <Widget>[
+                                            Expanded(
+                                                flex: 10,
+                                                child: Container(
+                                                    child: Row(
+                                                        children: <Widget>[
+                                                            Radio(
+                                                                value: "breakfast",
+                                                                groupValue: _selectedTypeS,
+                                                                onChanged: (_) {
+                                                                    setState(() {
+                                                                        _selectedTypeS = "breakfast";
+                                                                        _selectedType = KondateType.BREAKFAST;
+                                                                    });
+                                                                }
+                                                            ),
+                                                            Text(
+                                                                "朝食",
+                                                                style: TextStyle(fontSize: 18),
+                                                            ),
+                                                        ],
+                                                    ),
                                                 ),
                                             ),
-                                        ),
-                                        Expanded(
-                                            flex: 10,
-                                            child: Container(
-                                                child: Row(
-                                                    children: <Widget>[
-                                                        Radio(
-                                                            value: "lunch",
-                                                            groupValue: _selectedTypeS,
-                                                            onChanged: (_) {
-                                                                setState(() {
-                                                                    _selectedTypeS = "lunch";
-                                                                    _selectedType = KondateType.LUNCH;
-                                                                });
-                                                            },
-                                                        ),
-                                                        Text(
-                                                            "昼食",
-                                                            style: TextStyle(fontSize: 18),
-                                                        ),
-                                                    ],
+                                            Expanded(
+                                                flex: 10,
+                                                child: Container(
+                                                    child: Row(
+                                                        children: <Widget>[
+                                                            Radio(
+                                                                value: "lunch",
+                                                                groupValue: _selectedTypeS,
+                                                                onChanged: (_) {
+                                                                    setState(() {
+                                                                        _selectedTypeS = "lunch";
+                                                                        _selectedType = KondateType.LUNCH;
+                                                                    });
+                                                                },
+                                                            ),
+                                                            Text(
+                                                                "昼食",
+                                                                style: TextStyle(fontSize: 18),
+                                                            ),
+                                                        ],
+                                                    ),
                                                 ),
                                             ),
-                                        ),
-                                        Expanded(
-                                            flex: 7,
-                                            child: Container(
-                                                child: Row(
-                                                    children: <Widget>[
-                                                        Radio(
-                                                            value: "dinner",
-                                                            groupValue: _selectedTypeS,
-                                                            onChanged: (_) {
-                                                                setState(() {
-                                                                    _selectedTypeS = "dinner";
-                                                                    _selectedType = KondateType.DINNER;
-                                                                });
-                                                            },
-                                                        ),
-                                                        Text(
-                                                            "夕食",
-                                                            style: TextStyle(fontSize: 18),
-                                                        ),
-                                                    ],
+                                            Expanded(
+                                                flex: 7,
+                                                child: Container(
+                                                    child: Row(
+                                                        children: <Widget>[
+                                                            Radio(
+                                                                value: "dinner",
+                                                                groupValue: _selectedTypeS,
+                                                                onChanged: (_) {
+                                                                    setState(() {
+                                                                        _selectedTypeS = "dinner";
+                                                                        _selectedType = KondateType.DINNER;
+                                                                    });
+                                                                },
+                                                            ),
+                                                            Text(
+                                                                "夕食",
+                                                                style: TextStyle(fontSize: 18),
+                                                            ),
+                                                        ],
+                                                    ),
                                                 ),
                                             ),
-                                        ),
-                                    ],
+                                        ],
+                                    ),
                                 ),
                                 Padding(
                                     padding: EdgeInsets.symmetric(vertical: 4),
@@ -158,10 +169,14 @@ class _SearchPageState extends State<SearchPage> {
                                         endIndent: 0,
                                     ),
                                 ),
+                                Expanded(
+                                    flex: 86,
+                                    child: resultListView,
+                                ),
                             ],
                         ),
                         Visibility(
-                            visible: false,
+                            visible: nowLoading,
                             child: SpinKitCircle(
                                 color: Colors.orange,
                                 size: 100.0,
@@ -170,6 +185,49 @@ class _SearchPageState extends State<SearchPage> {
                     ],
                 ),
             ),
+        );
+    }
+
+    Future<Null> updateResultListView(String query) async {
+        setState(() {
+            nowLoading = true;
+        });
+        searchKondateData(query).then((_result) {
+            setState(() {
+                final result = _result.where((elem) => elem.type == _selectedType).toList();
+                if(result.length > 0) {
+                    resultListView =  buildResultListView(result);
+                } else {
+                    resultListView = ListView(
+                        children: [
+                            Center(
+                                child: Text(
+                                    "検索条件に当てはまるデータはありませんでした",
+                                    style: TextStyle(fontSize: 20),
+                                ),
+                            ),
+                        ],
+                    );
+                }
+                nowLoading = false;
+            });
+        });
+    }
+
+    Widget buildResultListView(List<KInfoSearchResponse_SearchResult> result) {
+        return ListView.separated(
+            itemCount: result.length,
+            itemBuilder: (BuildContext context, int idx) {
+                var _date = result[idx].date;
+                final date = DateTime(_date.year, _date.month, _date.dayofmonth);
+                return Text(
+                    genAppropirateDateText(date),
+                    style: TextStyle(fontSize: 18),
+                );
+            },
+            separatorBuilder: (BuildContext context, int idx) {
+                return Divider(thickness: 1);
+            },
         );
     }
 }

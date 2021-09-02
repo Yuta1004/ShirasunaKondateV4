@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_spinkit/flutter_spinkit.dart";
 
 class SearchPage extends StatefulWidget {
     @override
@@ -6,6 +7,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+    final  _formKey = GlobalKey<FormState>();
+
     @override
     Widget build(BuildContext context) {
         return Scaffold(
@@ -22,7 +25,75 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                 ],
             ),
-            body: Text("検索画面"),
+            body: Padding(
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                child: Stack(
+                    children: <Widget>[
+                        Column(
+                            children: <Widget>[
+                                Flexible(
+                                    child: Form(
+                                        key: _formKey,
+                                        child: Row(
+                                            children: <Widget>[
+                                                Expanded(
+                                                    flex: 8,
+                                                    child: Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 4),
+                                                        child: TextFormField(
+                                                            decoration: InputDecoration(
+                                                                hintText: "検索したいメニューを入力してください",
+                                                            ),
+                                                            validator: (String? value) {
+                                                                if(value == null || value.isEmpty) {
+                                                                    return "メニュー名を入力してください";
+                                                                }
+                                                                return null;
+                                                            },
+                                                        ),
+                                                    ),
+                                                ),
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 4),
+                                                        child: ElevatedButton(
+                                                            child: Text("検索"),
+                                                            style: ElevatedButton.styleFrom(
+                                                                primary: Colors.orange,
+                                                            ),
+                                                            onPressed: () {
+                                                                if(_formKey.currentState != null && _formKey.currentState!.validate()) {
+                                                                    print("OK");
+                                                                }
+                                                            },
+                                                        ),
+                                                    ),
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 4),
+                                    child: Divider(
+                                        thickness: 1,
+                                        indent: 0,
+                                        endIndent: 0,
+                                    ),
+                                ),
+                            ],
+                        ),
+                        Visibility(
+                            visible: false,
+                            child: SpinKitCircle(
+                                color: Colors.orange,
+                                size: 100.0,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
         );
     }
 }

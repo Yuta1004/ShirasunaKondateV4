@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "pages/home_page/home_page.dart";
+import "pages/search_page/search_page.dart";
 
 class MyApp extends StatelessWidget {
     @override
@@ -9,7 +10,11 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 primarySwatch: Colors.orange,
             ),
-            home: HomePage(),
+            initialRoute: "/",
+            routes: {
+                "/": (context) => HomePage(),
+                "/search": (context) => SearchPage(),
+            },
         );
     }
 }

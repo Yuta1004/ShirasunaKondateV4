@@ -14,9 +14,9 @@ class _SearchPageState extends State<SearchPage> {
     final  _formKey = GlobalKey<FormState>();
     String _selectedTypeS = "breakfast";
     KondateType _selectedType = KondateType.BREAKFAST;
-    bool nowLoading = false;
-    Widget resultListView = ListView();
-    TextEditingController queryController = TextEditingController();
+    bool _nowLoading = false;
+    Widget _resultListView = ListView();
+    TextEditingController _queryController = TextEditingController();
 
     @override
     Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
                                                     child: Padding(
                                                         padding: EdgeInsets.symmetric(horizontal: 4),
                                                         child: TextFormField(
-                                                            controller: queryController,
+                                                            controller: _queryController,
                                                             decoration: InputDecoration(
                                                                 hintText: "検索したいメニューを入力してください",
                                                             ),
@@ -74,8 +74,8 @@ class _SearchPageState extends State<SearchPage> {
                                                                 primary: Colors.orange,
                                                             ),
                                                             onPressed: () {
-                                                                if(_formKey.currentState != null && _formKey.currentState!.validate() && !nowLoading) {
-                                                                    updateResultListView(queryController.text);
+                                                                if(_formKey.currentState != null && _formKey.currentState!.validate() && !_nowLoading) {
+                                                                    _updateResultListView(_queryController.text);
                                                                 }
                                                             },
                                                         ),
@@ -171,12 +171,12 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                                 Expanded(
                                     flex: 86,
-                                    child: resultListView,
+                                    child: _resultListView,
                                 ),
                             ],
                         ),
                         Visibility(
-                            visible: nowLoading,
+                            visible: _nowLoading,
                             child: SpinKitCircle(
                                 color: Colors.orange,
                                 size: 100.0,
@@ -188,17 +188,17 @@ class _SearchPageState extends State<SearchPage> {
         );
     }
 
-    Future<Null> updateResultListView(String query) async {
+    Future<Null> _updateResultListView(String query) async {
         setState(() {
-            nowLoading = true;
+            _nowLoading = true;
         });
         searchKondateData(query).then((_result) {
             setState(() {
                 final result = _result.where((elem) => elem.type == _selectedType).toList();
                 if(result.length > 0) {
-                    resultListView =  buildResultListView(result);
+                    _resultListView =  _buildResultListView(result);
                 } else {
-                    resultListView = ListView(
+                    _resultListView = ListView(
                         children: [
                             Center(
                                 child: Text(
@@ -209,12 +209,12 @@ class _SearchPageState extends State<SearchPage> {
                         ],
                     );
                 }
-                nowLoading = false;
+                _nowLoading = false;
             });
         });
     }
 
-    Widget buildResultListView(List<KInfoSearchResponse_SearchResult> result) {
+    Widget _buildResultListView(List<KInfoSearchResponse_SearchResult> result) {
         return ListView.separated(
             itemCount: result.length,
             itemBuilder: (BuildContext context, int idx) {

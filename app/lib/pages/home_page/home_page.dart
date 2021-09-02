@@ -116,6 +116,12 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 18,
                                         ),
                                     ),
+                                    Text(
+                                        "©2021 Yuta Nakagami",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                        ),
+                                    ),
                                 ],
                             ),
                         ),
@@ -150,17 +156,6 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                         leading: Icon(Icons.settings),
                                         title: Text("設定")
-                                    ),
-                                    Text(
-                                        "その他",
-                                        style: TextStyle(fontSize: 15),
-                                    ),
-                                    Divider(
-                                        thickness: 1,
-                                    ),
-                                    ListTile(
-                                        leading: Icon(Icons.info),
-                                        title: Text("アプリ情報"),
                                     ),
                                 ],
                             ),

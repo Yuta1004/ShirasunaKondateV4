@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import 'package:marquee_widget/marquee_widget.dart';
+import "package:marquee_widget/marquee_widget.dart";
+import "package:flutter_spinkit/flutter_spinkit.dart";
 import 'package:tuple/tuple.dart';
 import "/grpc/conn.dart";
 import "/db/model.dart";
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
     bool hasSwiped = false;
+    bool nowLoading = false;
     DateTime displayingDate = DateTime.now();
     Widget kondateListView = ListView();
 
@@ -43,39 +45,50 @@ class _HomePageState extends State<HomePage> {
                     ),
                 ],
             ),
-            body: Column(
-                children: <Widget> [
-                    Expanded(
-                        flex: 7,
-                        child: Container(
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            child: Center(
-                                child: Text(
-                                    genAppropirateDateText(displayingDate),
-                                    style: TextStyle(fontSize: 30),
+            body: Stack(
+                children: <Widget>[
+                    Column(
+                        children: <Widget> [
+                            Expanded(
+                                flex: 7,
+                                child: Container(
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                    child: Center(
+                                        child: Text(
+                                            genAppropirateDateText(displayingDate),
+                                            style: TextStyle(fontSize: 30),
+                                        ),
+                                    ),
                                 ),
                             ),
-                        ),
+                            Divider(
+                                color: Colors.grey[850],
+                                thickness: 1,
+                                indent: 32,
+                                endIndent: 32,
+                            ),
+                            Expanded(
+                                flex : 93,
+                                child: GestureDetector(
+                                    onPanUpdate: (event) {
+                                        if(!hasSwiped) {
+                                            hasSwiped = true;
+                                            displayingDate = displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
+                                            updateKondateListView(displayingDate);
+                                        }
+                                    },
+                                    onPanEnd: (event) { hasSwiped = false; },
+                                    child: kondateListView,
+                                ),
+                            ),
+                        ],
                     ),
-                    Divider(
-                        color: Colors.grey[850],
-                        thickness: 1,
-                        indent: 32,
-                        endIndent: 32,
-                    ),
-                    Expanded(
-                        flex : 93,
-                        child: GestureDetector(
-                            onPanUpdate: (event) {
-                                if(!hasSwiped) {
-                                    hasSwiped = true;
-                                    displayingDate = displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
-                                    updateKondateListView(displayingDate);
-                                }
-                            },
-                            onPanEnd: (event) { hasSwiped = false; },
-                            child: kondateListView,
+                    Visibility(
+                        visible: nowLoading,
+                        child: SpinKitCircle(
+                            color: Colors.orange,
+                            size: 100.0,
                         ),
                     ),
                 ],
@@ -176,11 +189,15 @@ class _HomePageState extends State<HomePage> {
     }
 
     Future<Null> updateKondateListView(DateTime date) async {
+        setState(() {
+            nowLoading = true;
+        });
         getKondateData(displayingDate).then((data) {
             setState(() {
                 if(data.length > 0) {
                     kondateListView = buildKondateListView(data);
                 }
+                nowLoading = false;
             });
         });
     }

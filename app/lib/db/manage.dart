@@ -42,7 +42,7 @@ Future<bool> existsKondateData(DateTime date) async {
 Future<Null> insertKondateData(KondateData data) async {
     final conn = await openDatabase(DBNAME);
     await conn.transaction((txn) async {
-        await conn.insert("kondate", data.toMap());
+        await txn.insert("kondate", data.toMap());
     });
     await conn.close();
 }

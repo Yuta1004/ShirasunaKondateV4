@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:settings_ui/settings_ui.dart';
+import "/settings/settings.dart";
 
 class SettingsPage extends StatefulWidget {
     @override
@@ -7,6 +8,20 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+    bool _displayTomorrowKondate = false;
+    bool _displayNutritiveInfo = false;
+
+    @override
+    void initState() {
+        super.initState();
+        getDisplayTomorrowKondateSettings().then((val) {
+            setState(() { _displayTomorrowKondate = val; });
+        });
+        getDisplayNutritiveInfoSettings().then((val) {
+            setState(() { _displayNutritiveInfo = val; });
+        });
+    }
+
     @override
     Widget build(BuildContext context) {
         return Scaffold(
@@ -23,8 +38,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         tiles: <SettingsTile>[
                             SettingsTile.switchTile(
                                 title: "有効にする",
-                                switchValue: true,
-                                onToggle: (bool value) {},
+                                switchValue: _displayTomorrowKondate,
+                                onToggle: (bool val) {
+                                    setDisplayTomorrowKondateSettings(val);
+                                    setState(() { _displayTomorrowKondate = val; });
+                                },
                             ),
                             SettingsTile(
                                 title: "時刻",
@@ -37,8 +55,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         tiles: <SettingsTile>[
                             SettingsTile.switchTile(
                                 title: "有効にする",
-                                switchValue: true,
-                                onToggle: (bool value) {},
+                                switchValue: _displayNutritiveInfo,
+                                onToggle: (bool val) {
+                                    setDisplayNutritiveInfoSettings(val);
+                                    setState(() { _displayNutritiveInfo = val; });
+                                },
                             ),
                             SettingsTile(
                                 title: "表示する栄養情報",

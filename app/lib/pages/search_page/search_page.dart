@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_spinkit/flutter_spinkit.dart";
+import "/grpc/utils.pb.dart";
 
 class SearchPage extends StatefulWidget {
     @override
@@ -8,6 +9,8 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
     final  _formKey = GlobalKey<FormState>();
+    String _selectedTypeS = "breakfast";
+    KondateType _selectedType = KondateType.BREAKFAST;
 
     @override
     Widget build(BuildContext context) {
@@ -73,6 +76,79 @@ class _SearchPageState extends State<SearchPage> {
                                             ],
                                         ),
                                     ),
+                                ),
+                                Row(
+                                    children: <Widget>[
+                                        Expanded(
+                                            flex: 10,
+                                            child: Container(
+                                                child: Row(
+                                                    children: <Widget>[
+                                                        Radio(
+                                                            value: "breakfast",
+                                                            groupValue: _selectedTypeS,
+                                                            onChanged: (_) {
+                                                                setState(() {
+                                                                    _selectedTypeS = "breakfast";
+                                                                    _selectedType = KondateType.BREAKFAST;
+                                                                });
+                                                            }
+                                                        ),
+                                                        Text(
+                                                            "朝食",
+                                                            style: TextStyle(fontSize: 18),
+                                                        ),
+                                                    ],
+                                                ),
+                                            ),
+                                        ),
+                                        Expanded(
+                                            flex: 10,
+                                            child: Container(
+                                                child: Row(
+                                                    children: <Widget>[
+                                                        Radio(
+                                                            value: "lunch",
+                                                            groupValue: _selectedTypeS,
+                                                            onChanged: (_) {
+                                                                setState(() {
+                                                                    _selectedTypeS = "lunch";
+                                                                    _selectedType = KondateType.LUNCH;
+                                                                });
+                                                            },
+                                                        ),
+                                                        Text(
+                                                            "昼食",
+                                                            style: TextStyle(fontSize: 18),
+                                                        ),
+                                                    ],
+                                                ),
+                                            ),
+                                        ),
+                                        Expanded(
+                                            flex: 7,
+                                            child: Container(
+                                                child: Row(
+                                                    children: <Widget>[
+                                                        Radio(
+                                                            value: "dinner",
+                                                            groupValue: _selectedTypeS,
+                                                            onChanged: (_) {
+                                                                setState(() {
+                                                                    _selectedTypeS = "dinner";
+                                                                    _selectedType = KondateType.DINNER;
+                                                                });
+                                                            },
+                                                        ),
+                                                        Text(
+                                                            "夕食",
+                                                            style: TextStyle(fontSize: 18),
+                                                        ),
+                                                    ],
+                                                ),
+                                            ),
+                                        ),
+                                    ],
                                 ),
                                 Padding(
                                     padding: EdgeInsets.symmetric(vertical: 4),

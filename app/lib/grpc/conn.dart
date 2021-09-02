@@ -49,3 +49,14 @@ Future<List<KondateData>> getKondateData(DateTime date) async {
 
     return await selectKondateData(date);
 }
+
+Future<List<KInfoSearchResponse_SearchResult>> searchKondateData(String query) async {
+    final stub = createStub();
+    try {
+        final data = await stub.search(KInfoSearchRequest(query: query));
+        if(data.result == Result.SUCCESS) {
+            return data.searchResults;
+        }
+    } catch (error) { }
+    return [];
+}

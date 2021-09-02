@@ -13,10 +13,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-    bool hasSwiped = false;
-    bool nowLoading = false;
-    DateTime displayingDate = DateTime.now();
-    Widget kondateListView = ListView();
+    bool _hasSwiped = false;
+    bool _nowLoading = false;
+    DateTime _displayingDate = DateTime.now();
+    Widget _kondateListView = ListView();
 
     @override
     void initState() {
@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         existsTables().then((exists) async {
             if(!exists) await createTables();
         });
-        updateKondateListView(displayingDate);
+        _updateKondateListView(_displayingDate);
     }
 
     @override
@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                                     alignment: Alignment.center,
                                     child: Center(
                                         child: Text(
-                                            genAppropirateDateText(displayingDate),
+                                            genAppropirateDateText(_displayingDate),
                                             style: TextStyle(fontSize: 30),
                                         ),
                                     ),
@@ -69,20 +69,20 @@ class _HomePageState extends State<HomePage> {
                                 flex : 93,
                                 child: GestureDetector(
                                     onPanUpdate: (event) {
-                                        if(!hasSwiped && !nowLoading) {
-                                            hasSwiped = true;
-                                            displayingDate = displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
-                                            updateKondateListView(displayingDate);
+                                        if(!_hasSwiped && !_nowLoading) {
+                                            _hasSwiped = true;
+                                            _displayingDate = _displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
+                                            _updateKondateListView(_displayingDate);
                                         }
                                     },
-                                    onPanEnd: (event) { hasSwiped = false; },
-                                    child: kondateListView,
+                                    onPanEnd: (event) { _hasSwiped = false; },
+                                    child: _kondateListView,
                                 ),
                             ),
                         ],
                     ),
                     Visibility(
-                        visible: nowLoading,
+                        visible: _nowLoading,
                         child: SpinKitCircle(
                             color: Colors.orange,
                             size: 100.0,
@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                         leading: Icon(Icons.calendar_today),
                                         title: Text("日時指定"),
-                                        onTap: () { setDisplayingDate(context); },
+                                        onTap: () { _setDisplayingDate(context); },
                                     ),
                                     ListTile(
                                         leading: Icon(Icons.search),
@@ -167,33 +167,33 @@ class _HomePageState extends State<HomePage> {
         );
     }
 
-    Future<Null> setDisplayingDate(BuildContext context) async {
+    Future<Null> _setDisplayingDate(BuildContext context) async {
         Navigator.pop(context);
         final nowDate = DateTime.now();
         final DateTime? picked = await showDatePicker(
             context: context,
-            initialDate: displayingDate,
+            initialDate: _displayingDate,
             firstDate: nowDate.add(Duration(days: -365*5)),
             lastDate: nowDate.add(Duration(days: 365*10))
         );
         if(picked != null) {
             setState(() {
-                displayingDate = picked;
-                updateKondateListView(displayingDate);
+                _displayingDate = picked;
+                _updateKondateListView(_displayingDate);
             });
         }
     }
 
-    Future<Null> updateKondateListView(DateTime date) async {
+    Future<Null> _updateKondateListView(DateTime date) async {
         setState(() {
-            nowLoading = true;
+            _nowLoading = true;
         });
-        getKondateData(displayingDate).then((data) {
+        getKondateData(_displayingDate).then((data) {
             setState(() {
                 if(data.length > 0) {
-                    kondateListView = buildKondateListView(data);
+                    _kondateListView = _buildKondateListView(data);
                 } else {
-                    kondateListView = ListView(
+                    _kondateListView = ListView(
                         children: [
                             Center(
                                 child: Text(
@@ -204,12 +204,12 @@ class _HomePageState extends State<HomePage> {
                         ],
                     );
                 }
-                nowLoading = false;
+                _nowLoading = false;
             });
         });
     }
 
-    Widget buildKondateListView(List<KondateData> data) {
+    Widget _buildKondateListView(List<KondateData> data) {
         // item1=>text, item2=>isTitle, item3=>hasSeparater, item4=>nutritive_info
         var menuDisplayInfo = <Tuple4>[];
         final typeNames = ["朝食", "昼食", "夕食"];

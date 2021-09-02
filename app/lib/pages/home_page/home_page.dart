@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:marquee_widget/marquee_widget.dart";
 import "package:flutter_spinkit/flutter_spinkit.dart";
 import 'package:tuple/tuple.dart';
+import 'package:url_launcher/url_launcher.dart';
 import "/grpc/conn.dart";
 import "/db/model.dart";
 import "/db/manage.dart";
@@ -149,6 +150,7 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                         leading: Icon(Icons.offline_share),
                                         title: Text("欠食システムを開く"),
+                                        onTap: () async { await _openOfficialKondateSystem(context); },
                                     ),
                                 ],
                             ),
@@ -258,6 +260,33 @@ class _HomePageState extends State<HomePage> {
             separatorBuilder: (BuildContext context, int idx) {
                 var hasSeparater = menuDisplayInfo[idx].item3;
                 return hasSeparater ? Divider(thickness: 1) : SizedBox(width: 0, height: 0);
+            },
+        );
+    }
+
+    Future<Null> _openOfficialKondateSystem(BuildContext context) async {
+        Navigator.pop(context);
+        await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+                return AlertDialog(
+                    title: Text("確認"),
+                    content: Text("欠食システムを開いても良いですか?(ブラウザが起動します)"),
+                    actions: <Widget>[
+                        TextButton(
+                            child: Text("キャンセル"),
+                            onPressed: () { Navigator.of(context).pop(0); }
+                        ),
+                        TextButton(
+                            child: Text("OK"),
+                            onPressed: () async {
+                                Navigator.of(context).pop(1);
+                                final url = "https://shirasunaryou.sakura.ne.jp/cgi-bin/shirasuna/GAIHAKU/login.cgi?guid=ON";
+                                if(await canLaunch(url)) launch(url);
+                            },
+                        ),
+                    ],
+                );
             },
         );
     }

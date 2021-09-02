@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                                 flex : 93,
                                 child: GestureDetector(
                                     onPanUpdate: (event) {
-                                        if(!hasSwiped) {
+                                        if(!hasSwiped && !nowLoading) {
                                             hasSwiped = true;
                                             displayingDate = displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
                                             updateKondateListView(displayingDate);

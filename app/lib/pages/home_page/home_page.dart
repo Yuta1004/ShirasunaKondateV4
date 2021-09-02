@@ -1,6 +1,10 @@
 import "package:flutter/material.dart";
-import 'package:marquee_widget/marquee_widget.dart';
+import "package:marquee_widget/marquee_widget.dart";
+import "package:flutter_spinkit/flutter_spinkit.dart";
 import 'package:tuple/tuple.dart';
+import "/grpc/conn.dart";
+import "/db/model.dart";
+import "/db/manage.dart";
 import "/utils/date.dart";
 
 class HomePage extends StatefulWidget {
@@ -10,7 +14,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
     bool hasSwiped = false;
+    bool nowLoading = false;
     DateTime displayingDate = DateTime.now();
+    Widget kondateListView = ListView();
+
+    @override
+    void initState() {
+        super.initState();
+        existsTables().then((exists) async {
+            if(!exists) await createTables();
+        });
+        updateKondateListView(displayingDate);
+    }
 
     @override
     Widget build(BuildContext context) {
@@ -33,40 +48,50 @@ class _HomePageState extends State<HomePage> {
                     ),
                 ],
             ),
-            body: Column(
-                children: <Widget> [
-                    Expanded(
-                        flex: 7,
-                        child: Container(
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            child: Center(
-                                child: Text(
-                                    genAppropirateDateText(displayingDate),
-                                    style: TextStyle(fontSize: 30),
+            body: Stack(
+                children: <Widget>[
+                    Column(
+                        children: <Widget> [
+                            Expanded(
+                                flex: 7,
+                                child: Container(
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                    child: Center(
+                                        child: Text(
+                                            genAppropirateDateText(displayingDate),
+                                            style: TextStyle(fontSize: 30),
+                                        ),
+                                    ),
                                 ),
                             ),
-                        ),
+                            Divider(
+                                color: Colors.grey[850],
+                                thickness: 1,
+                                indent: 32,
+                                endIndent: 32,
+                            ),
+                            Expanded(
+                                flex : 93,
+                                child: GestureDetector(
+                                    onPanUpdate: (event) {
+                                        if(!hasSwiped) {
+                                            hasSwiped = true;
+                                            displayingDate = displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
+                                            updateKondateListView(displayingDate);
+                                        }
+                                    },
+                                    onPanEnd: (event) { hasSwiped = false; },
+                                    child: kondateListView,
+                                ),
+                            ),
+                        ],
                     ),
-                    Divider(
-                        color: Colors.grey[850],
-                        thickness: 1,
-                        indent: 32,
-                        endIndent: 32,
-                    ),
-                    Expanded(
-                        flex : 93,
-                        child: GestureDetector(
-                            onPanUpdate: (event) {
-                                setState(() {
-                                    if(!hasSwiped) {
-                                        displayingDate = displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
-                                        hasSwiped = true;
-                                    }
-                                });
-                            },
-                            onPanEnd: (event) { hasSwiped = false; },
-                            child: buildKondateListView(),
+                    Visibility(
+                        visible: nowLoading,
+                        child: SpinKitCircle(
+                            color: Colors.orange,
+                            size: 100.0,
                         ),
                     ),
                 ],
@@ -162,27 +187,46 @@ class _HomePageState extends State<HomePage> {
             lastDate: nowDate.add(Duration(days: 365*10))
         );
         if(picked != null) {
-            setState(() { displayingDate = picked; });
+            setState(() {
+                displayingDate = picked;
+                updateKondateListView(displayingDate);
+            });
         }
     }
 
-    Widget buildKondateListView() {
+    Future<Null> updateKondateListView(DateTime date) async {
+        setState(() {
+            nowLoading = true;
+        });
+        getKondateData(displayingDate).then((data) {
+            setState(() {
+                if(data.length > 0) {
+                    kondateListView = buildKondateListView(data);
+                } else {
+                    kondateListView = ListView(
+                        children: [
+                            Text(
+                                "表示できるデータがありません",
+                                style: TextStyle(fontSize: 20),
+                            ),
+                        ],
+                    );
+                }
+                nowLoading = false;
+            });
+        });
+    }
+
+    Widget buildKondateListView(List<KondateData> data) {
         // item1=>text, item2=>isTitle, item3=>hasSeparater, item4=>nutritive_info
         var menuDisplayInfo = <Tuple4>[];
-        menuDisplayInfo.add(Tuple4("朝食", true, false, ""));
-        menuDisplayInfo.add(Tuple4("ライス", false, true, ""));
-        menuDisplayInfo.add(Tuple4("鮭の塩焼き", false, true, ""));
-        menuDisplayInfo.add(Tuple4("ほうれん草のおひたし", false, true, ""));
-        menuDisplayInfo.add(Tuple4("大根と油揚げの味噌汁", false, false, ""));
-        menuDisplayInfo.add(Tuple4("昼食", true, false, ""));
-        menuDisplayInfo.add(Tuple4("牛焼肉チャーハン", false, true, ""));
-        menuDisplayInfo.add(Tuple4("春巻き", false, true, ""));
-        menuDisplayInfo.add(Tuple4("牛乳", false, false, ""));
-        menuDisplayInfo.add(Tuple4("夕食", true, false, ""));
-        menuDisplayInfo.add(Tuple4("ライス", false, true, ""));
-        menuDisplayInfo.add(Tuple4("ヒレカツ", false, true, ""));
-        menuDisplayInfo.add(Tuple4("ツナときのこの和風パスタ", false, true, ""));
-        menuDisplayInfo.add(Tuple4("豆腐とワカメの味噌汁", false, false, ""));
+        final typeNames = ["朝食", "昼食", "夕食"];
+        data.asMap().forEach((type, kondate) {
+            menuDisplayInfo.add(Tuple4(typeNames[type], true, false, ""));
+            kondate.info.menu.asMap().forEach((idx, menu) {
+                menuDisplayInfo.add(Tuple4(menu, false, idx != kondate.info.menu.length-1, ""));
+            });
+        });
 
         return ListView.separated(
             padding: EdgeInsets.all(8),

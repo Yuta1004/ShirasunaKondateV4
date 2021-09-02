@@ -37,14 +37,17 @@ class _HomePageState extends State<HomePage> {
                 ),
                 actions: <Widget> [
                     IconButton(
-                        icon: Icon(Icons.add_to_home_screen),
-                        tooltip: "欠食システムを開く",
-                        onPressed: () {},
+                        icon: Icon(Icons.calendar_today),
+                        tooltip: "日時指定",
+                        onPressed: () { _setDisplayingDate(context); },
                     ),
                     IconButton(
-                        icon: Icon(Icons.help_outline),
-                        tooltip: "ヘルプを見る",
-                        onPressed: () {},
+                        icon: Icon(Icons.home),
+                        tooltip: "今日の献立",
+                        onPressed: () {
+                            _displayingDate = DateTime.now();
+                            _updateKondateListView(_displayingDate);
+                        },
                     ),
                 ],
             ),
@@ -130,33 +133,22 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget> [
-                                    Text(
-                                        "メニュー",
-                                        style: TextStyle(fontSize: 15)
-                                    ),
-                                    Divider(
-                                        thickness: 1,
-                                    ),
-                                    ListTile(
-                                        leading: Icon(Icons.calendar_today),
-                                        title: Text("日時指定"),
-                                        onTap: () { _setDisplayingDate(context); },
-                                    ),
                                     ListTile(
                                         leading: Icon(Icons.search),
                                         title: Text("献立検索"),
                                         onTap: () { Navigator.pushNamed(context, "/search"); },
                                     ),
-                                    Text(
-                                        "設定",
-                                        style: TextStyle(fontSize: 15)
-                                    ),
-                                    Divider(
-                                        thickness: 1,
-                                    ),
                                     ListTile(
                                         leading: Icon(Icons.settings),
                                         title: Text("設定")
+                                    ),
+                                    ListTile(
+                                        leading: Icon(Icons.help),
+                                        title: Text("アプリの使い方"),
+                                    ),
+                                    ListTile(
+                                        leading: Icon(Icons.offline_share),
+                                        title: Text("欠食システムを開く"),
                                     ),
                                 ],
                             ),
@@ -168,7 +160,6 @@ class _HomePageState extends State<HomePage> {
     }
 
     Future<Null> _setDisplayingDate(BuildContext context) async {
-        Navigator.pop(context);
         final nowDate = DateTime.now();
         final DateTime? picked = await showDatePicker(
             context: context,

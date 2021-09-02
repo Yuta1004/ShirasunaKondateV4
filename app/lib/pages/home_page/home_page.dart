@@ -205,9 +205,11 @@ class _HomePageState extends State<HomePage> {
                 } else {
                     kondateListView = ListView(
                         children: [
-                            Text(
-                                "表示できるデータがありません",
-                                style: TextStyle(fontSize: 20),
+                            Center(
+                                child: Text(
+                                    "表示できるデータがありません",
+                                    style: TextStyle(fontSize: 20),
+                                ),
                             ),
                         ],
                     );

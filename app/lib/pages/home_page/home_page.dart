@@ -184,7 +184,10 @@ class _HomePageState extends State<HomePage> {
             lastDate: nowDate.add(Duration(days: 365*10))
         );
         if(picked != null) {
-            setState(() { displayingDate = picked; });
+            setState(() {
+                displayingDate = picked;
+                updateKondateListView(displayingDate);
+            });
         }
     }
 

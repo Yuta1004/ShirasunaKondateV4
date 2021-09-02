@@ -144,7 +144,8 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     ListTile(
                                         leading: Icon(Icons.search),
-                                        title: Text("献立検索")
+                                        title: Text("献立検索"),
+                                        onTap: () { Navigator.pushNamed(context, "/search"); },
                                     ),
                                     Text(
                                         "設定",

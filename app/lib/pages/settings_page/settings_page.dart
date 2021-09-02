@@ -68,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ],
                     ),
                     SettingsSection(
-                        title: "その他",
+                        title: "サーバ",
                         tiles: <SettingsTile>[
                             SettingsTile(
                                 title: "配信サーバURL",

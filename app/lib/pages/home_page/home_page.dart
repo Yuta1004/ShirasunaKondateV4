@@ -196,6 +196,15 @@ class _HomePageState extends State<HomePage> {
             setState(() {
                 if(data.length > 0) {
                     kondateListView = buildKondateListView(data);
+                } else {
+                    kondateListView = ListView(
+                        children: [
+                            Text(
+                                "表示できるデータがありません",
+                                style: TextStyle(fontSize: 20),
+                            ),
+                        ],
+                    );
                 }
                 nowLoading = false;
             });

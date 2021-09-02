@@ -27,14 +27,14 @@ Future<Null> createTables() async {
 
 Future<bool> existsKondateData(DateTime date) async {
     final conn = await openDatabase(DBNAME);
-    final exists =  1 == Sqflite.firstIntValue(
+    final exists = 0 < Sqflite.firstIntValue(
         await conn.query(
             "kondate",
             columns: ["count(*)"],
             where: "date = ?",
             whereArgs: [date.year*10000+date.month*100+date.day]
         )
-    );
+    )!;
     await conn.close();
     return exists;
 }

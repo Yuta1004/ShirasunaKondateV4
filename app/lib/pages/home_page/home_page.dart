@@ -1,8 +1,9 @@
 import "package:flutter/material.dart";
 import 'package:marquee_widget/marquee_widget.dart';
-import 'package:shirasunakondatev4app/db/manage.dart';
 import 'package:tuple/tuple.dart';
+import "/grpc/conn.dart";
 import "/db/model.dart";
+import "/db/manage.dart";
 import "/utils/date.dart";
 
 class HomePage extends StatefulWidget {
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
     bool hasSwiped = false;
     DateTime displayingDate = DateTime.now();
+    Widget kondateListView = ListView();
 
     _HomePageState() {
         existsTables().then((exists) {
@@ -66,15 +68,14 @@ class _HomePageState extends State<HomePage> {
                         flex : 93,
                         child: GestureDetector(
                             onPanUpdate: (event) {
-                                setState(() {
-                                    if(!hasSwiped) {
-                                        displayingDate = displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
-                                        hasSwiped = true;
-                                    }
-                                });
+                                if(!hasSwiped) {
+                                    hasSwiped = true;
+                                    displayingDate = displayingDate.add(Duration(days: event.delta.dx > 0 ? -1 : 1));
+                                    updateKondateListView(displayingDate);
+                                }
                             },
                             onPanEnd: (event) { hasSwiped = false; },
-                            child: buildKondateListView(),
+                            child: kondateListView,
                         ),
                     ),
                 ],
@@ -174,23 +175,26 @@ class _HomePageState extends State<HomePage> {
         }
     }
 
-    Widget buildKondateListView() {
+    Future<Null> updateKondateListView(DateTime date) async {
+        getKondateData(displayingDate).then((data) {
+            setState(() {
+                if(data.length > 0) {
+                    kondateListView = buildKondateListView(data);
+                }
+            });
+        });
+    }
+
+    Widget buildKondateListView(List<KondateData> data) {
         // item1=>text, item2=>isTitle, item3=>hasSeparater, item4=>nutritive_info
         var menuDisplayInfo = <Tuple4>[];
-        menuDisplayInfo.add(Tuple4("朝食", true, false, ""));
-        menuDisplayInfo.add(Tuple4("ライス", false, true, ""));
-        menuDisplayInfo.add(Tuple4("鮭の塩焼き", false, true, ""));
-        menuDisplayInfo.add(Tuple4("ほうれん草のおひたし", false, true, ""));
-        menuDisplayInfo.add(Tuple4("大根と油揚げの味噌汁", false, false, ""));
-        menuDisplayInfo.add(Tuple4("昼食", true, false, ""));
-        menuDisplayInfo.add(Tuple4("牛焼肉チャーハン", false, true, ""));
-        menuDisplayInfo.add(Tuple4("春巻き", false, true, ""));
-        menuDisplayInfo.add(Tuple4("牛乳", false, false, ""));
-        menuDisplayInfo.add(Tuple4("夕食", true, false, ""));
-        menuDisplayInfo.add(Tuple4("ライス", false, true, ""));
-        menuDisplayInfo.add(Tuple4("ヒレカツ", false, true, ""));
-        menuDisplayInfo.add(Tuple4("ツナときのこの和風パスタ", false, true, ""));
-        menuDisplayInfo.add(Tuple4("豆腐とワカメの味噌汁", false, false, ""));
+        final typeNames = ["朝食", "昼食", "夕食"];
+        data.asMap().forEach((type, kondate) {
+            menuDisplayInfo.add(Tuple4(typeNames[type], true, false, ""));
+            kondate.info.menu.asMap().forEach((idx, menu) {
+                menuDisplayInfo.add(Tuple4(menu, false, idx != kondate.info.menu.length-1, ""));
+            });
+        });
 
         return ListView.separated(
             padding: EdgeInsets.all(8),

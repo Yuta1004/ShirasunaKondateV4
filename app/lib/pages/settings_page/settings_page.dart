@@ -56,7 +56,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                 onPressed: (context) {
                                     Navigator.of(context).push(
                                         showPicker(
-                                            value: TimeOfDay.now(),
+                                            value: TimeOfDay.now().replacing(
+                                                hour: int.parse(_displayTomorrowKondateTime.split(":")[0]),
+                                                minute: int.parse(_displayTomorrowKondateTime.split(":")[1]),
+                                            ),
                                             onChange: (TimeOfDay time) {
                                                 final savedTime = DateTime(2020, 1, 1, time.hour, time.minute);
                                                 setDisplayTomorrowKondateTimeSettings(savedTime);

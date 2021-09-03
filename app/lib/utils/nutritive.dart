@@ -20,9 +20,9 @@ String genFormattedNutritiveText(Map<Nutritive, bool> detailsTable, KInfoRespons
 
 String _convertNutritive2Name(Nutritive nutritive) {
     if(nutritive == Nutritive.Calorie) return "カロリー";
-    if(nutritive == Nutritive.Carbohydrate) return "タンパク質";
+    if(nutritive == Nutritive.Carbohydrate) return "炭水化物";
     if(nutritive == Nutritive.Lipid) return "脂質";
-    if(nutritive == Nutritive.Protein) return "炭水化物";
+    if(nutritive == Nutritive.Protein) return "タンパク質";
     return "塩分";
 }
 

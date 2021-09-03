@@ -12,9 +12,9 @@ message KInfoResponse {
         KondateType type = 1;
         repeated string menu = 2;
         int32 calorie = 3;             // カロリー(kcal)
-        float carbohydrate = 4;     // タンパク質(g)
+        float carbohydrate = 4;     // 炭水化物(g)
         float lipid = 5;                   // 脂質(g)
-        float protein = 6;              // 炭水化物(g)
+        float protein = 6;              // タンパク質(g)
         float salt = 7;                   // 塩分(g)
     }
     Result result = 1;

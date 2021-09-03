@@ -17,9 +17,9 @@ class KondateData {
             type: _convertInt2Type(type),
             menu: menuList.split(";").where((elem) => elem.length > 0).toList(),
             calorie: int.parse(splittedNutritiveList[0]),
-            carbohydrate: double.parse(splittedNutritiveList[1]),
+            carbohydrate: double.parse(splittedNutritiveList[3]),
             lipid: double.parse(splittedNutritiveList[2]),
-            protein: double.parse(splittedNutritiveList[3]),
+            protein: double.parse(splittedNutritiveList[1]),
             salt: double.parse(splittedNutritiveList[4]),
         );
     }
@@ -29,7 +29,7 @@ class KondateData {
             "date": this.date.year*10000+this.date.month*100+this.date.day,
             "type": _convertType2Int(this.info.type),
             "menu_list": this.info.menu.join(";"),
-            "nutritive_list": [this.info.calorie, this.info.carbohydrate, this.info.lipid, this.info.protein, this.info.salt].join(";"),
+            "nutritive_list": [this.info.calorie, this.info.protein, this.info.lipid, this.info.carbohydrate, this.info.salt].join(";"),
         };
     }
 

@@ -55,7 +55,7 @@ class _SelectNutritivePageState extends State<SelectNutritivePage> {
                                 onToggle: (bool val) { updateDetailsTable(Nutritive.Calorie, val); }
                             ),
                             SettingsTile.switchTile(
-                                title: "タンパク質",
+                                title: "炭水化物",
                                 switchValue: detailsTable[Nutritive.Carbohydrate],
                                 onToggle: (bool val) { updateDetailsTable(Nutritive.Carbohydrate, val); },
                             ),
@@ -65,7 +65,7 @@ class _SelectNutritivePageState extends State<SelectNutritivePage> {
                                 onToggle: (bool val) { updateDetailsTable(Nutritive.Lipid, val); },
                             ),
                             SettingsTile.switchTile(
-                                title: "炭水化物",
+                                title: "タンパク質",
                                 switchValue: detailsTable[Nutritive.Protein],
                                 onToggle: (bool val) { updateDetailsTable(Nutritive.Protein, val); },
                             ),

@@ -101,6 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             SettingsTile(
                                 title: "配信サーバURL",
                                 subtitle: "https://www.aaa.example.com",
+                                onPressed: (context) { Navigator.pushNamed(context, "/settings/set_server_url"); },
                             ),
                         ],
                     ),

@@ -6,7 +6,7 @@ import "package:shared_preferences/shared_preferences.dart";
     - 時刻 : DateTime => (get/set)DisplayTomorrowKondateTimeSettings
 - 栄養情報表示
     - ON/OFF : bool => (get/set)DisplayNutritiveInfoSettings
-    - 要素 : List<String> => (get/set)DisplayNutritiveInfoDetailsSettings
+    - 要素 : Map<Nutritive, String> => (get/set)DisplayNutritiveInfoDetailsSettings
 - 配信サーバ
     - URL : String => (get/set)ServerURL
 */
@@ -49,14 +49,31 @@ void setDisplayNutritiveInfoSettings(bool value) async {
     pref.setBool("displayNutritiveInfo", value);
 }
 
-Future<List<String>> getDisplayNutritiveInfoDetailsSettings() async {
-    final pref = await SharedPreferences.getInstance();
-    return pref.getStringList("displayNutritiveInfoDetails") ?? ["Calorie"];
+enum Nutritive {
+    Calorie,
+    Carbohydrate,
+    Lipid,
+    Protein,
+    Salt,
 }
 
-void setDisplayNutritiveInfoDetailsSettings(List<String> details) async {
+Future<Map<Nutritive, bool>> getDisplayNutritiveInfoDetailsSettings() async {
     final pref = await SharedPreferences.getInstance();
-    pref.setStringList("displayNutritiveInfoDetails", details);
+    final savedList = pref.getStringList("displayNutritiveInfoDetails") ?? [Nutritive.Calorie.toString()];
+    final detailsTable = <Nutritive, bool>{};
+    for(Nutritive elem in Nutritive.values) {
+        detailsTable[elem] = savedList.contains(elem.toString());
+    }
+    return detailsTable;
+}
+
+void setDisplayNutritiveInfoDetailsSettings(Map<Nutritive, bool> detailsTable) async {
+    final pref = await SharedPreferences.getInstance();
+    final savedList = detailsTable.entries
+        .where((elem) => elem.value)
+        .map((elem) => elem.key.toString())
+        .toList();
+    pref.setStringList("displayNutritiveInfoDetails", savedList);
 }
 
 Future<String> getServerURL() async {

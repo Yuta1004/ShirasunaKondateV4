@@ -53,3 +53,13 @@ Future<List<KInfoSearchResponse_SearchResult>> searchKondateData(String query) a
     } catch (error) { }
     return [];
 }
+
+Future<bool> checkServerAvailability(String address) async {
+    final stub = createStub(address);
+    try {
+        await stub.get(Date(year: 2021, month: 6, dayofmonth: 30));
+    } catch (error) {
+        return false;
+    }
+    return true;
+}

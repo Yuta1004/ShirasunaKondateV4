@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import 'package:settings_ui/settings_ui.dart';
+import "package:settings_ui/settings_ui.dart";
+import "package:day_night_time_picker/day_night_time_picker.dart";
 import "/settings/settings.dart";
 
 class SettingsPage extends StatefulWidget {
@@ -9,6 +10,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
     bool _displayTomorrowKondate = false;
+    String _displayTomorrowKondateTime = "19:00";
     bool _displayNutritiveInfo = false;
 
     @override
@@ -16,6 +18,9 @@ class _SettingsPageState extends State<SettingsPage> {
         super.initState();
         getDisplayTomorrowKondateSettings().then((val) {
             setState(() { _displayTomorrowKondate = val; });
+        });
+        getDisplayTomorrowKondateTimeSettings().then((val) {
+            setState(() { _displayTomorrowKondateTime = val.hour.toString()+":"+val.minute.toString(); });
         });
         getDisplayNutritiveInfoSettings().then((val) {
             setState(() { _displayNutritiveInfo = val; });
@@ -46,8 +51,21 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             SettingsTile(
                                 title: "時刻",
-                                subtitle: "00:00から",
-                                onPressed: (context) { Navigator.pushNamed(context, "/settings/set_tomorrow_kondate_date"); },
+                                subtitle: _displayTomorrowKondateTime+"から",
+                                onPressed: (context) {
+                                    Navigator.of(context).push(
+                                        showPicker(
+                                            value: TimeOfDay.now(),
+                                            onChange: (TimeOfDay time) {
+                                                final savedTime = DateTime(2020, 1, 1, time.hour, time.minute);
+                                                setDisplayTomorrowKondateTimeSettings(savedTime);
+                                                setState(() {
+                                                    _displayTomorrowKondateTime = savedTime.hour.toString()+":"+savedTime.minute.toString();
+                                                });
+                                            },
+                                        )
+                                    );
+                                },
                             ),
                         ],
                     ),

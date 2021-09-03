@@ -97,7 +97,17 @@ class _SettingsPageState extends State<SettingsPage> {
                             SettingsTile(
                                 title: "表示する栄養情報",
                                 subtitle: sprintf("%dつ", [_displayNutritiveInfoDetailsNum]),
-                                onPressed: (context) { Navigator.pushNamed(context, "/settings/select_nutritive"); },
+                                onPressed: (context) {
+                                    Navigator.pushNamed(context, "/settings/select_nutritive").then((_){
+                                        setState(() {
+                                            getDisplayNutritiveInfoDetailsSettings().then((val) {
+                                                setState(() {
+                                                    _displayNutritiveInfoDetailsNum = val.values.where((elem) => elem).length;
+                                                });
+                                            });
+                                        });
+                                    });
+                                },
                             ),
                         ],
                     ),
@@ -107,7 +117,13 @@ class _SettingsPageState extends State<SettingsPage> {
                             SettingsTile(
                                 title: "配信サーバ",
                                 subtitle: _serverURL,
-                                onPressed: (context) { Navigator.pushNamed(context, "/settings/set_server_url"); },
+                                onPressed: (context) {
+                                    Navigator.pushNamed(context, "/settings/set_server_url").then((val) {
+                                        getServerURL().then((val) {
+                                            setState(() { _serverURL = val; });
+                                        });
+                                    });
+                                },
                             ),
                         ],
                     ),

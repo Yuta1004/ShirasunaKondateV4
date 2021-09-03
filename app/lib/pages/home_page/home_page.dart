@@ -7,6 +7,8 @@ import "/grpc/conn.dart";
 import "/db/model.dart";
 import "/db/manage.dart";
 import "/utils/date.dart";
+import "/utils/nutritive.dart";
+import "/settings/settings.dart";
 
 class HomePage extends StatefulWidget {
     @override
@@ -25,7 +27,13 @@ class _HomePageState extends State<HomePage> {
         existsTables().then((exists) async {
             if(!exists) await createTables();
         });
-        _updateKondateListView(_displayingDate);
+        getDisplayTomorrowKondateSettings().then((isEnabled) async {
+            if(isEnabled) {
+                final advanceDate = _displayingDate.isAfter(await getDisplayTomorrowKondateTimeSettings());
+                _displayingDate = _displayingDate.add(Duration(days: advanceDate ? 1 : 0));
+            }
+            _updateKondateListView(_displayingDate);
+        });
     }
 
     @override
@@ -142,7 +150,14 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                         leading: Icon(Icons.settings),
                                         title: Text("設定"),
-                                        onTap: () { Navigator.pushNamed(context, "/settings"); }
+                                        onTap: () {
+                                            Navigator.pushNamed(context, "/settings").then((_) {
+                                                setState(() {
+                                                    _displayingDate = _displayingDate.add(Duration(seconds: 1));
+                                                    _updateKondateListView(_displayingDate).then((_){});
+                                                });
+                                            });
+                                        }
                                     ),
                                     ListTile(
                                         leading: Icon(Icons.help),
@@ -182,10 +197,16 @@ class _HomePageState extends State<HomePage> {
         setState(() {
             _nowLoading = true;
         });
+
+        // displayNutritive => ON/OFF
+        final displayNutritive = await getDisplayNutritiveInfoSettings();
+        final nutritiveDetailsTable = await getDisplayNutritiveInfoDetailsSettings();
+        nutritiveDetailsTable.updateAll((k, v) => v && displayNutritive);
+
         getKondateData(_displayingDate).then((data) {
             setState(() {
                 if(data.length > 0) {
-                    _kondateListView = _buildKondateListView(data);
+                    _kondateListView = _buildKondateListView(nutritiveDetailsTable, data);
                 } else {
                     _kondateListView = ListView(
                         children: [
@@ -203,12 +224,12 @@ class _HomePageState extends State<HomePage> {
         });
     }
 
-    Widget _buildKondateListView(List<KondateData> data) {
+    Widget _buildKondateListView(Map<Nutritive, bool> nutritiveDetailsTable, List<KondateData> data) {
         // item1=>text, item2=>isTitle, item3=>hasSeparater, item4=>nutritive_info
         var menuDisplayInfo = <Tuple4>[];
         final typeNames = ["朝食", "昼食", "夕食"];
         data.asMap().forEach((type, kondate) {
-            menuDisplayInfo.add(Tuple4(typeNames[type], true, false, ""));
+            menuDisplayInfo.add(Tuple4(typeNames[type], true, false, genFormattedNutritiveText(nutritiveDetailsTable, kondate.info)));
             kondate.info.menu.asMap().forEach((idx, menu) {
                 menuDisplayInfo.add(Tuple4(menu, false, idx != kondate.info.menu.length-1, ""));
             });

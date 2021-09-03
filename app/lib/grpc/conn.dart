@@ -3,23 +3,14 @@ import "/grpc/utils.pb.dart";
 import "/grpc/v1/info_distributor_v1.pbgrpc.dart";
 import "/db/manage.dart";
 import "/db/model.dart";
+import "/settings/settings.dart";
 
-const _ADDRESS = "localhost";
-const _PORT = 50000;
-const _DEV_ENV = true;
-
-KInfoDistributorV1Client createStub() {
-    final options;
-    if(_DEV_ENV) {
-        options = ChannelOptions(credentials: ChannelCredentials.insecure());
-    } else {
-        options = ChannelOptions(credentials: ChannelCredentials.secure());
-    }
+KInfoDistributorV1Client createStub(String address) {
     return KInfoDistributorV1Client(
         ClientChannel(
-            _ADDRESS,
-            port: _PORT,
-            options: options,
+            address,
+            port: 50000,    // for DevEnv
+            options: ChannelOptions(credentials: ChannelCredentials.insecure()),    // for DevEnv
         ),
         options: CallOptions(
             timeout: Duration(seconds: 20),
@@ -33,7 +24,8 @@ Future<List<KondateData>> getKondateData(DateTime date) async {
         return await selectKondateData(date);
     }
 
-    final stub = createStub();
+    final address = await getServerURL();
+    final stub = createStub(address);
     try {
         final data = await stub.get(Date(year: date.year, month: date.month, dayofmonth: date.day));
         if(data.result == Result.SUCCESS) {
@@ -51,7 +43,8 @@ Future<List<KondateData>> getKondateData(DateTime date) async {
 }
 
 Future<List<KInfoSearchResponse_SearchResult>> searchKondateData(String query) async {
-    final stub = createStub();
+    final address = await getServerURL();
+    final stub = createStub(address);
     try {
         final data = await stub.search(KInfoSearchRequest(query: query));
         if(data.result == Result.SUCCESS) {
@@ -59,4 +52,14 @@ Future<List<KInfoSearchResponse_SearchResult>> searchKondateData(String query) a
         }
     } catch (error) { }
     return [];
+}
+
+Future<bool> checkServerAvailability(String address) async {
+    final stub = createStub(address);
+    try {
+        await stub.get(Date(year: 2021, month: 6, dayofmonth: 30));
+    } catch (error) {
+        return false;
+    }
+    return true;
 }

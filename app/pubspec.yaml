@@ -20,6 +20,10 @@ dependencies:
   sqflite: ^2.0.0+4
   flutter_spinkit: ^5.1.0
   url_launcher: ^6.0.9
+  shared_preferences: ^2.0.7
+  settings_ui: ^1.0.0
+  day_night_time_picker: ^1.0.3
+  sprintf: ^6.0.0
 
 dev_dependencies:
   flutter_test:

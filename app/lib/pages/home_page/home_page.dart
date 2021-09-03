@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                     Column(
                         children: <Widget> [
-                            Expanded(
+                            Flexible(
                                 flex: 7,
                                 child: Container(
                                     width: double.infinity,
@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                 ),
                             ),
-                            Expanded(
+                            Flexible(
                                 flex : 93,
                                 child: GestureDetector(
                                     onPanUpdate: (event) {

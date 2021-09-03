@@ -91,6 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             SettingsTile(
                                 title: "表示する栄養情報",
                                 subtitle: sprintf("%dつ", [_displayNutritiveInfoDetailsNum]),
+                                onPressed: (context) { Navigator.pushNamed(context, "/settings/select_nutritive"); },
                             ),
                         ],
                     ),

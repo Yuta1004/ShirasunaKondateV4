@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "pages/home_page/home_page.dart";
 import "pages/search_page/search_page.dart";
 import "pages/settings_page/settings_page.dart";
+import "pages/settings_page/select_nutritive_page.dart";
 
 class MyApp extends StatelessWidget {
     @override
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
                 "/": (context) => HomePage(),
                 "/search": (context) => SearchPage(),
                 "/settings": (context) => SettingsPage(),
+                "/settings/select_nutritive": (context) => SelectNutritivePage(),
             },
         );
     }

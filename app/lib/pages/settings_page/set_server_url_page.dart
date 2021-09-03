@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_spinkit/flutter_spinkit.dart";
+import "package:sprintf/sprintf.dart";
+import "/grpc/conn.dart";
+import "/settings/settings.dart";
 
 class SetServerURLPage extends StatefulWidget {
     @override
@@ -10,6 +13,14 @@ class _SetServerURLPageState extends State<SetServerURLPage> {
     bool _nowLoading = false;
     final _formKey = GlobalKey<FormState>();
     TextEditingController _urlController = TextEditingController();
+
+    @override
+    void initState() {
+        super.initState();
+        getServerURL().then((val) {
+            setState(() { _urlController.text = val; });
+        });
+    }
 
     @override
     Widget build(BuildContext context) {
@@ -40,8 +51,6 @@ class _SetServerURLPageState extends State<SetServerURLPage> {
                                                     validator: (String? value) {
                                                         if(value == null || value.isEmpty || Uri.parse(value).isAbsolute) {
                                                             return "正しいURL形式ではありません";
-                                                        } else if(false) {
-                                                            return "接続チェックに失敗しました";
                                                         }
                                                         return null;
                                                     },
@@ -57,9 +66,14 @@ class _SetServerURLPageState extends State<SetServerURLPage> {
                                                     style: ElevatedButton.styleFrom(
                                                         primary: Colors.orange,
                                                     ),
-                                                    onPressed: () {
+                                                    onPressed: () async {
                                                         if(_formKey.currentState != null && _formKey.currentState!.validate() && !_nowLoading) {
-                                                            print(_urlController.text);
+                                                            setState(() { _nowLoading = true; });
+                                                            checkServerAvailability(_urlController.text).then((isAvailable) {
+                                                                setState(() { _nowLoading = false; });
+                                                                if(isAvailable) { setServerURL(_urlController.text); }
+                                                                showAlertDialog(context, isAvailable);
+                                                            });
                                                         }
                                                     },
                                                 ),
@@ -90,6 +104,24 @@ class _SetServerURLPageState extends State<SetServerURLPage> {
                     ),
                 ],
             ),
+        );
+    }
+
+    Future<Null> showAlertDialog(BuildContext context, bool result) async {
+        await showDialog(
+            context: context,
+            builder: (_) {
+                return AlertDialog(
+                    title: Text("接続チェック結果"),
+                    content: Text(sprintf("配信サーバの接続チェックに%sしました", [result ? "成功" : "失敗"])),
+                    actions: <Widget>[
+                        TextButton(
+                            child: Text("OK"),
+                            onPressed: () => Navigator.pop(context),
+                        )
+                    ],
+                );
+            }
         );
     }
 }

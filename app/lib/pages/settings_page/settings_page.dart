@@ -47,6 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             SettingsTile(
                                 title: "時刻",
                                 subtitle: "00:00から",
+                                onPressed: (context) { Navigator.pushNamed(context, "/settings/set_tomorrow_kondate_date"); },
                             ),
                         ],
                     ),

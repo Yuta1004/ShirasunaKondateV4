@@ -40,8 +40,8 @@ class _SearchPageState extends State<SearchPage> {
                     children: <Widget>[
                         Column(
                             children: <Widget>[
-                                Expanded(
-                                    flex: 7,
+                                Flexible(
+                                    flex: 10,
                                     child: Form(
                                         key: _formKey,
                                         child: Row(
@@ -85,7 +85,7 @@ class _SearchPageState extends State<SearchPage> {
                                         ),
                                     ),
                                 ),
-                                Expanded(
+                                Flexible(
                                     flex: 7,
                                     child: Row(
                                         children: <Widget>[
@@ -169,8 +169,8 @@ class _SearchPageState extends State<SearchPage> {
                                         endIndent: 0,
                                     ),
                                 ),
-                                Expanded(
-                                    flex: 86,
+                                Flexible(
+                                    flex: 83,
                                     child: _resultListView,
                                 ),
                             ],

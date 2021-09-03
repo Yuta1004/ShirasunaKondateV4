@@ -13,6 +13,7 @@ class _SettingsPageState extends State<SettingsPage> {
     bool _displayTomorrowKondate = false;
     String _displayTomorrowKondateTime = "19:00";
     bool _displayNutritiveInfo = false;
+    int _displayNutritiveInfoDetailsNum = 1;
 
     @override
     void initState() {
@@ -25,6 +26,9 @@ class _SettingsPageState extends State<SettingsPage> {
         });
         getDisplayNutritiveInfoSettings().then((val) {
             setState(() { _displayNutritiveInfo = val; });
+        });
+        getDisplayNutritiveInfoDetailsSettings().then((val) {
+            setState(() { _displayNutritiveInfoDetailsNum = val.length; });
         });
     }
 
@@ -86,7 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             SettingsTile(
                                 title: "表示する栄養情報",
-                                subtitle: "カロリー/塩分",
+                                subtitle: sprintf("%dつ", [_displayNutritiveInfoDetailsNum]),
                             ),
                         ],
                     ),

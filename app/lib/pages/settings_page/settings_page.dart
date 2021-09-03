@@ -14,6 +14,7 @@ class _SettingsPageState extends State<SettingsPage> {
     String _displayTomorrowKondateTime = "19:00";
     bool _displayNutritiveInfo = false;
     int _displayNutritiveInfoDetailsNum = 1;
+    String _serverURL = "";
 
     @override
     void initState() {
@@ -29,6 +30,9 @@ class _SettingsPageState extends State<SettingsPage> {
         });
         getDisplayNutritiveInfoDetailsSettings().then((val) {
             setState(() { _displayNutritiveInfoDetailsNum = val.length; });
+        });
+        getServerURL().then((val) {
+            setState(() { _serverURL = val; });
         });
     }
 
@@ -99,8 +103,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         title: "サーバ",
                         tiles: <SettingsTile>[
                             SettingsTile(
-                                title: "配信サーバURL",
-                                subtitle: "https://www.aaa.example.com",
+                                title: "配信サーバ",
+                                subtitle: _serverURL,
                                 onPressed: (context) { Navigator.pushNamed(context, "/settings/set_server_url"); },
                             ),
                         ],

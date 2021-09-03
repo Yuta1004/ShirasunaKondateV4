@@ -29,7 +29,9 @@ class _SettingsPageState extends State<SettingsPage> {
             setState(() { _displayNutritiveInfo = val; });
         });
         getDisplayNutritiveInfoDetailsSettings().then((val) {
-            setState(() { _displayNutritiveInfoDetailsNum = val.length; });
+            setState(() {
+                _displayNutritiveInfoDetailsNum = val.values.where((elem) => elem).length;
+            });
         });
         getServerURL().then((val) {
             setState(() { _serverURL = val; });

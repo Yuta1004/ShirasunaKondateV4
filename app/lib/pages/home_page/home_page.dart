@@ -240,6 +240,7 @@ class _HomePageState extends State<HomePage> {
                             Expanded(
                                 flex: 9,
                                 child: Marquee(
+                                    pauseDuration: Duration(seconds: 1),
                                     child: Text(
                                         nutritiveInfo,
                                         style: TextStyle(fontSize: 18)

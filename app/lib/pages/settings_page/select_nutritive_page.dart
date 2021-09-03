@@ -107,6 +107,7 @@ class _SelectNutritivePageState extends State<SelectNutritivePage> {
                                 Expanded(
                                     flex: 9,
                                     child: Marquee(
+                                        pauseDuration: Duration(seconds: 1),
                                         child: Text(
                                             genFormattedNutritiveText(detailsTable, kondateDemoData),
                                             style: TextStyle(fontSize: 18)

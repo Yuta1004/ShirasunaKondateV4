@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
 import "package:settings_ui/settings_ui.dart";
 import "package:marquee_widget/marquee_widget.dart";
+import "/grpc/v1/info_distributor_v1.pb.dart";
+import "/utils/nutritive.dart";
+import "/settings/settings.dart";
 
 class SelectNutritivePage extends StatefulWidget {
     @override
@@ -8,6 +11,31 @@ class SelectNutritivePage extends StatefulWidget {
 }
 
 class _SelectNutritivePageState extends State<SelectNutritivePage> {
+    Map<Nutritive, bool> detailsTable = {
+        Nutritive.Calorie: true,
+        Nutritive.Carbohydrate: false,
+        Nutritive.Lipid: false,
+        Nutritive.Protein: false,
+        Nutritive.Salt: false,
+    };
+    final kondateDemoData = KInfoResponse_Kondate(
+        type: null,
+        menu: null,
+        calorie: 629,
+        carbohydrate: 20.1,
+        lipid: 17.5,
+        protein: 103.5,
+        salt: 2.3
+    );
+
+    @override
+    void initState() {
+        super.initState();
+        getDisplayNutritiveInfoDetailsSettings().then((val) {
+            setState(() { detailsTable = val; });
+        });
+    }
+
     @override
     Widget build(BuildContext context) {
         return Scaffold(
@@ -23,28 +51,28 @@ class _SelectNutritivePageState extends State<SelectNutritivePage> {
                         tiles: <SettingsTile>[
                             SettingsTile.switchTile(
                                 title: "カロリー",
-                                switchValue: true,
-                                onToggle: (bool val) {},
+                                switchValue: detailsTable[Nutritive.Calorie],
+                                onToggle: (bool val) { updateDetailsTable(Nutritive.Calorie, val); }
                             ),
                             SettingsTile.switchTile(
                                 title: "タンパク質",
-                                switchValue: true,
-                                onToggle: (bool val) {},
+                                switchValue: detailsTable[Nutritive.Carbohydrate],
+                                onToggle: (bool val) { updateDetailsTable(Nutritive.Carbohydrate, val); },
                             ),
                             SettingsTile.switchTile(
                                 title: "脂質",
-                                switchValue: true,
-                                onToggle: (bool val) {},
+                                switchValue: detailsTable[Nutritive.Lipid],
+                                onToggle: (bool val) { updateDetailsTable(Nutritive.Lipid, val); },
                             ),
                             SettingsTile.switchTile(
                                 title: "炭水化物",
-                                switchValue: true,
-                                onToggle: (bool val) {},
+                                switchValue: detailsTable[Nutritive.Protein],
+                                onToggle: (bool val) { updateDetailsTable(Nutritive.Protein, val); },
                             ),
                             SettingsTile.switchTile(
                                 title: "塩分",
-                                switchValue: true,
-                                onToggle: (bool val) {},
+                                switchValue: detailsTable[Nutritive.Salt],
+                                onToggle: (bool val) { updateDetailsTable(Nutritive.Salt, val); },
                             ),
                         ],
                     ),
@@ -80,7 +108,7 @@ class _SelectNutritivePageState extends State<SelectNutritivePage> {
                                     flex: 9,
                                     child: Marquee(
                                         child: Text(
-                                            "あああああああああ",
+                                            genFormattedNutritiveText(detailsTable, kondateDemoData),
                                             style: TextStyle(fontSize: 18)
                                         ),
                                     ),
@@ -91,5 +119,12 @@ class _SelectNutritivePageState extends State<SelectNutritivePage> {
                 ],
             ),
         );
+    }
+
+    void updateDetailsTable(Nutritive nutritive, bool val) {
+        detailsTable[nutritive] = val;
+        setState(() {
+            setDisplayNutritiveInfoDetailsSettings(detailsTable);
+        });
     }
 }

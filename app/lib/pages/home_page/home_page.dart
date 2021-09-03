@@ -150,7 +150,14 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                         leading: Icon(Icons.settings),
                                         title: Text("設定"),
-                                        onTap: () { Navigator.pushNamed(context, "/settings"); }
+                                        onTap: () {
+                                            Navigator.pushNamed(context, "/settings").then((_) {
+                                                setState(() {
+                                                    _displayingDate = _displayingDate.add(Duration(seconds: 1));
+                                                    _updateKondateListView(_displayingDate).then((_){});
+                                                });
+                                            });
+                                        }
                                     ),
                                     ListTile(
                                         leading: Icon(Icons.help),

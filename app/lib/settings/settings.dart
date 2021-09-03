@@ -36,7 +36,7 @@ Future<DateTime> getDisplayTomorrowKondateTimeSettings() async {
 
 void setDisplayTomorrowKondateTimeSettings(DateTime time) async {
     final pref = await SharedPreferences.getInstance();
-    pref.setInt("displayTomorrowKondateTime", time.hour*60+time.second);
+    pref.setInt("displayTomorrowKondateTime", time.hour*60+time.minute);
 }
 
 Future<bool> getDisplayNutritiveInfoSettings() async {

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:settings_ui/settings_ui.dart";
 import "package:day_night_time_picker/day_night_time_picker.dart";
+import "package:sprintf/sprintf.dart";
 import "/settings/settings.dart";
 
 class SettingsPage extends StatefulWidget {
@@ -20,7 +21,7 @@ class _SettingsPageState extends State<SettingsPage> {
             setState(() { _displayTomorrowKondate = val; });
         });
         getDisplayTomorrowKondateTimeSettings().then((val) {
-            setState(() { _displayTomorrowKondateTime = val.hour.toString()+":"+val.minute.toString(); });
+            setState(() { _displayTomorrowKondateTime = sprintf("%02d:%02d", [val.hour, val.minute]); });
         });
         getDisplayNutritiveInfoSettings().then((val) {
             setState(() { _displayNutritiveInfo = val; });
@@ -60,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 final savedTime = DateTime(2020, 1, 1, time.hour, time.minute);
                                                 setDisplayTomorrowKondateTimeSettings(savedTime);
                                                 setState(() {
-                                                    _displayTomorrowKondateTime = savedTime.hour.toString()+":"+savedTime.minute.toString();
+                                                    _displayTomorrowKondateTime = sprintf("%02d:%02d", [savedTime.hour, savedTime.minute]);
                                                 });
                                             },
                                         )

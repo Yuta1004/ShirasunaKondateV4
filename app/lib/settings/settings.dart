@@ -41,7 +41,7 @@ void setDisplayTomorrowKondateTimeSettings(DateTime time) async {
 
 Future<bool> getDisplayNutritiveInfoSettings() async {
     final pref = await SharedPreferences.getInstance();
-    return pref.getBool("displayNutritiveInfo") ?? false;
+    return pref.getBool("displayNutritiveInfo") ?? true;
 }
 
 void setDisplayNutritiveInfoSettings(bool value) async {

@@ -27,7 +27,13 @@ class _HomePageState extends State<HomePage> {
         existsTables().then((exists) async {
             if(!exists) await createTables();
         });
-        _updateKondateListView(_displayingDate);
+        getDisplayTomorrowKondateSettings().then((isEnabled) async {
+            if(isEnabled) {
+                final advanceDate = _displayingDate.isAfter(await getDisplayTomorrowKondateTimeSettings());
+                _displayingDate = _displayingDate.add(Duration(days: advanceDate ? 1 : 0));
+            }
+            _updateKondateListView(_displayingDate);
+        });
     }
 
     @override

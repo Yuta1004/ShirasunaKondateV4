@@ -24,9 +24,6 @@ class _HomePageState extends State<HomePage> {
     @override
     void initState() {
         super.initState();
-        existsTables().then((exists) async {
-            if(!exists) await createTables();
-        });
         getDisplayTomorrowKondateSettings().then((isEnabled) async {
             if(isEnabled) {
                 final advanceDate = _displayingDate.isAfter(await getDisplayTomorrowKondateTimeSettings());

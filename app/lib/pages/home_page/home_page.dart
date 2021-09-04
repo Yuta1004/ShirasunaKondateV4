@@ -165,6 +165,7 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                         leading: Icon(Icons.help),
                                         title: Text("アプリの使い方"),
+                                        onTap: () { Navigator.pushNamed(context, "/help"); }
                                     ),
                                     ListTile(
                                         leading: Icon(Icons.offline_share),

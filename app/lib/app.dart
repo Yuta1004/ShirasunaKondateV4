@@ -5,6 +5,7 @@ import "pages/search_page/search_page.dart";
 import "pages/settings_page/settings_page.dart";
 import "pages/settings_page/select_nutritive_page.dart";
 import "pages/settings_page/set_server_url_page.dart";
+import "pages/help_page/help_page.dart";
 
 class MyApp extends StatelessWidget {
     @override
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
                 "/settings": (context) => SettingsPage(),
                 "/settings/select_nutritive": (context) => SelectNutritivePage(),
                 "/settings/set_server_url": (context) => SetServerURLPage(),
+                "/help": (context) => HelpPage(),
             },
         );
     }

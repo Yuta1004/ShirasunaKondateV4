@@ -49,6 +49,10 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             body: Column(
                 children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                        child: Container(),
+                    ),
                     SettingsSection(
                         title: "起動時に翌日の献立を表示",
                         tiles: <SettingsTile>[

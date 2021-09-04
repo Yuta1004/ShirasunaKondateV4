@@ -9,17 +9,16 @@ import work.nitycnyuta.shirasunakondatev4.server.api.v1.KInfoDistributorV1Servic
 class APIServer(private val port: Int) {
     val server: Server = ServerBuilder
                 .forPort(port)
+                .intercept(LogInterceptor())
                 .addService(KInfoDistributorV1Service())
                 .build()
 
     fun start() {
         server.start()
-        println("API Server started. (Port: $port)")
+        println("API Server started.")
         Runtime.getRuntime().addShutdownHook(
             Thread {
-                println("Shutting down API Server since JVM is shutting down.")
                 this@APIServer.stop()
-                println("API Server successfuly shut down.")
             }
         )
     }

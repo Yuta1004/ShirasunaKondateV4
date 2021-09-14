@@ -78,7 +78,7 @@ void setDisplayNutritiveInfoDetailsSettings(Map<Nutritive, bool> detailsTable) a
 
 Future<String> getServerURL() async {
     final pref = await SharedPreferences.getInstance();
-    return pref.getString("serverURL") ?? "localhost";
+    return pref.getString("serverURL") ?? "skondate.nityc-nyuta.work";
 }
 
 void setServerURL(String url) async {

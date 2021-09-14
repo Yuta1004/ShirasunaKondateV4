@@ -9,8 +9,7 @@ KInfoDistributorV1Client createStub(String address) {
     return KInfoDistributorV1Client(
         ClientChannel(
             address,
-            port: 50000,    // for DevEnv
-            options: ChannelOptions(credentials: ChannelCredentials.insecure()),    // for DevEnv
+            options: ChannelOptions(credentials: ChannelCredentials.secure()),
         ),
         options: CallOptions(
             timeout: Duration(seconds: 20),
@@ -36,6 +35,7 @@ Future<List<KondateData>> getKondateData(DateTime date) async {
             return [];
         }
     } catch (error) {
+        print(error);
         return [];
     }
 

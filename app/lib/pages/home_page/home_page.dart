@@ -82,6 +82,7 @@ class _HomePageState extends State<HomePage> {
                                 indent: 32,
                                 endIndent: 32,
                                 color: Colors.black,
+                                height: 1,
                             ),
                             Flexible(
                                 flex : 93,
@@ -94,7 +95,10 @@ class _HomePageState extends State<HomePage> {
                                         }
                                     },
                                     onPanEnd: (event) { _hasSwiped = false; },
-                                    child: _kondateListView,
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 8),
+                                        child: _kondateListView,
+                                    ),
                                 ),
                             ),
                         ],

@@ -67,9 +67,12 @@ class _HomePageState extends State<HomePage> {
                                     width: double.infinity,
                                     alignment: Alignment.center,
                                     child: Center(
-                                        child: Text(
-                                            genAppropirateDateText(_displayingDate),
-                                            style: TextStyle(fontSize: 30),
+                                        child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: Text(
+                                                genAppropirateDateText(_displayingDate),
+                                                style: TextStyle(fontSize: 30),
+                                            ),
                                         ),
                                     ),
                                 ),

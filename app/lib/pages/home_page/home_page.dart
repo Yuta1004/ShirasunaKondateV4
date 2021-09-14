@@ -111,7 +111,10 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget> [
                         DrawerHeader(
                             decoration: BoxDecoration(
-                                color: Colors.orange[300],
+                                image: DecorationImage(
+                                    fit: BoxFit.fitWidth,
+                                    image: AssetImage("assets/images/drawer.jpg"),
+                                ),
                             ),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,20 +124,23 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                         "白砂寮献立アプリ+",
                                         style: TextStyle(
-                                            fontSize: 20,
+                                            color: Colors.white,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                         ),
                                     ),
                                     Text(
                                         "Version 1.0.0",
                                         style: TextStyle(
-                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontSize: 16,
                                         ),
                                     ),
                                     Text(
                                         "©2021 Yuta Nakagami",
                                         style: TextStyle(
-                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontSize: 16,
                                         ),
                                     ),
                                 ],

@@ -3,6 +3,7 @@
 FROM python:3.7.11-slim AS skondatepy
 COPY skondatepy /home
 COPY skondatepy/data /srv
+COPY --chown=root:root cron.txt /var/spool/cron/crontabs/root
 ENV SK_SAVE_DIR /srv
 RUN cd /home && \
         apt update -y && \

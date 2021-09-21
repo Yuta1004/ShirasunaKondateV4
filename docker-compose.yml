@@ -7,7 +7,6 @@ services:
         environment:
             TZ: Asia/Tokyo
         volumes:
-            - ./cron.txt:/var/spool/cron/crontabs/root
             - data:/srv
         command: >
             bash -c "busybox crond -l 8 -L /dev/stderr -f"

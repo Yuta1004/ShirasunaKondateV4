@@ -10,6 +10,7 @@ services:
             - data:/srv
         command: >
             bash -c "busybox crond -l 8 -L /dev/stderr -f"
+        restart: always
     api:
         build:
             context: .
@@ -22,6 +23,7 @@ services:
             - data:/srv
         command: >
             bash -c "/home/bin/api"
+        restart: always
 volumes:
     data:
         name: shirasunakondatev4_data

@@ -14,6 +14,8 @@ dependencies {
 
     implementation("com.google.protobuf:protobuf-kotlin:${rootProject.ext["protobufVersion"]}")
     implementation("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
+    implementation("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
+    implementation("io.grpc:grpc-services:${rootProject.ext["grpcVersion"]}")
 
     runtimeOnly("io.grpc:grpc-netty:${rootProject.ext["grpcVersion"]}")
 }

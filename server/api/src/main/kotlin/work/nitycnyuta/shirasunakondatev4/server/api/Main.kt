@@ -4,6 +4,7 @@ package work.nitycnyuta.shirasunakondatev4.server.api
 
 import io.grpc.Server
 import io.grpc.ServerBuilder
+import io.grpc.protobuf.services.ProtoReflectionService;
 import work.nitycnyuta.shirasunakondatev4.server.api.v1.KInfoDistributorV1Service
 
 class APIServer(private val port: Int) {
@@ -11,6 +12,7 @@ class APIServer(private val port: Int) {
                 .forPort(port)
                 .intercept(LogInterceptor())
                 .addService(KInfoDistributorV1Service())
+                .addService(ProtoReflectionService.newInstance())
                 .build()
 
     fun start() {
